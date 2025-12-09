@@ -1,0 +1,80 @@
+💻 Design Outline: Impulsive.cc
+The core design philosophy is "High-Contrast Retro-Terminal Performance."
+## 🌐 Impulsive.cc: Homepage Design (Mobile & Desktop)
+The homepage serves as a dramatic, single-page command prompt for your digital identity.
+1. Visual & Aesthetic Elements
+ * Color Palette: Strictly adhered to the specified green-on-black scheme.
+   * Primary Text/Lines: #00DD00 (Vibrant Green)
+   * Glow/Highlight: #33FF33 (Neon Green)
+   * Dark Accent: #003300 (Deep Dark Green)
+   * Background: #000000 (Pure Black)
+ * Typography: The entire page uses a fixed-width, monospace font (e.g., VT323 or Share Tech Mono), reinforcing the terminal look.
+ * CRT/Terminal Effect:
+   * A subtle, fixed Scanline Overlay CSS effect (semi-transparent white horizontal lines) covers the entire screen.
+   * A slight Glow Effect is applied to all main text and UI elements using text-shadow in the neon green color (#33FF33), mimicking the phosphor decay of old CRT screens.
+ * Background Animation:
+   * Matrix Rain: A continuous, optimized digital rain effect flows globally in the background, using the dark green (#003300) for the main trails and vibrant green (#00DD00) for the falling characters.
+   * Dancing Geometric Shapes: Simple, glowing SVG/Canvas shapes (e.g., rotating wireframe cubes, interconnected lines) are overlaid onto the Matrix Rain. They move slowly and randomly, using the glow color (#33FF33) to stand out.
+2. Core Content & Structure
+ * Main Header: Centered, large, and highly stylized.
+   * Text: "WELCOME"
+   * Style: Oversized, glowing text with an intense phosphor effect.
+ * Quote Section: Located immediately below the header.
+   * Quote: "the truth finds those who seek"
+   * Style: Slightly smaller text, but still prominent, perhaps with a subtle "typing" animation effect on load.
+ * Navigation & UI:
+   * "PROJECTS" Button/Link: This is the primary interactive element.
+     * Interaction: Clicking it triggers a smooth drop-down terminal window or overlay (not just a basic menu) that scrolls down slightly over the main page content.
+     * Content: The overlay lists all project links in the same monospace font.
+     * Initial Project Link: >> shapes.sim (or similar command-line style link).
+ * Footer:
+   * Content: > CONNECTION ESTABLISHED // IMPULSIVE.CC // DESIGNED BY ISAAC
+   * Style: Fixed to the bottom, uses smaller, less intense glowing text.
+## 🚀 Impulsive.cc/shapes: The Simulator Page
+This page is a deep-dive into your procedural art, designed for maximum visual impact and user control.
+1. Shared Aesthetics & Navigation
+ * Theme Continuity: This page uses the exact same Matrix Rain background, Color Palette, Typography, and CRT/Scanline Overlays as the homepage to ensure a seamless transition.
+ * Header & Navigation:
+   * The page name (e.g., impulsive.cc/shapes) is displayed prominently, styled like a file path or terminal prompt.
+   * "HOME" Button/Link: A clear, glowing link/button (e.g., << RETURN TO BASE) positioned in the top corner to navigate back to impulsive.cc.
+2. Simulator Interface: "The Control Panel"
+The key challenge is creating a powerful, variable-rich interface that is fully mobile-optimized while allowing the simulation to dominate the screen.
+ * Layout: The page is split into two main areas:
+   * Simulation Canvas (80% of screen): This is the main viewport where the shapes evolve. It should be full-screen on desktop, and a large, high-aspect ratio section on mobile.
+   * Control Panel / Variables (20% of screen): A collapsible/slide-out panel for parameters.
+ * Control Panel Design:
+   * Aesthetic: Styled like an old-school debug or configuration menu.
+   * Mobile Optimization: The Control Panel is initially hidden and accessed via a glowing "MODIFY >" button. When clicked, it slides out or collapses from the side (desktop) or bottom (mobile), partially overlaying the simulation canvas with a semi-transparent black background.
+   * Structure: Variables are organized into expandable sections:
+     * > SIMULATION SELECT
+     * > VISUAL CONFIG
+     * > PHYSICAL MODIFIERS
+3. Simulation Features (Infinitely Evolving)
+All simulations must run continuously and evolve slowly based on time/frame counters, ensuring they are always dynamic.
+ * Variable Inputs (The Knobs): These should be styled as minimal, monospace-labeled sliders or text boxes that look like command line inputs.
+   * Global Variables:
+     * COLOR HUE: A slider that cycles the simulation's primary color (e.g., from green to blue to red, then back to green).
+     * TRAIL DECAY (Opacity): Controls the persistence of the path tracing (like the rgba(0,0,0,0.02) mentioned).
+     * GLOBAL SPEED: Multiplier for all time-dependent variables (\omega_{global}, \omega_{zoom}).
+     * ZOOM MAGNITUDE: Controls the intensity of the R_{max} oscillation.
+   * Formula-Specific Variables (for the Evolving Star Fractal):
+     * N-SPOKES (A Factor): Slider to change the N-Scaling Factor A.
+     * WINDING (B Factor): Slider to change the Theta Factor B.
+ * Simulation Selection (SIMULATION SELECT): A dropdown or list of glowing links to switch between the 6 distinct simulations.
+4. The 6 Complex Simulations
+The simulations are designed for a "Wow Factor," emphasizing complex mathematical beauty and continuous, non-repeating evolution.
+| # | Name | Core Concept & Visual Goal | Base Formula Type |
+|---|---|---|---|
+| 1 | Evolving Star Fractal | The specified dynamic star-to-web-to-spiral transition. Emphasizes modulation and path-tracing. | Complex Number Addition (Specified) |
+| 2 | Hyperspace Web | A dense, 3D-projected web of points where lines connect to their neighbors based on a probability function. The whole structure slowly rotates and distorts, mimicking a wormhole view. | 3D Projection & Neighbor-Search (Variation 1) |
+| 3 | Lissajous Cascade | A large number of overlapping, slightly different Lissajous-style figures where the frequency ratio (\frac{A}{B}) of each figure is a slowly evolving prime number ratio, causing the figure to never fully close or repeat. | Sine/Cosine Plotting (Variation 2) |
+| 4 | Magnetic Field Line Tracer | A simulation of particles moving along magnetic field lines defined by a noisy function (e.g., Perlin noise). Particles leave trails that fade quickly, creating a look of plasma flowing through a field. | Vector Fields & Particle Systems |
+| 5 | Asymmetric Orbitals | A system of 3 or more orbiting points whose gravitational/attraction constants are slightly non-integer (as per Variation 3), leading to highly complex, non-symmetric figure-eights and lopsided spirals. | Differential Equations (Variation 3) |
+| 6 | Reaction-Diffusion Ring | A simulation (cellular automata or similar) that generates a continuous, slow-motion abstract pattern of evolving colors/shades that travel around a circular canvas edge, reminiscent of a chemical process. | Cellular Automata / PDE Approximation |
+## 📱 Mobile Optimization Strategy
+The app must be fully responsive and maintain the aesthetic on smaller screens.
+ * Fluid Units: Use vw (viewport width) and percentages for sizing, rather than fixed pixels, especially for text and canvas size.
+ * Canvas Priority: The main simulation canvas must occupy the maximum available vertical space on a phone (Portrait orientation).
+ * Control Panel Collapse: As detailed above, the Control Panel must be a collapsible overlay triggered by a button, ensuring the simulation is visible at all times.
+ * Touch Input: Ensure sliders and buttons are large enough for comfortable touch interaction (minimum target size of 44x44px).
+ * Performance: The continuous animations and simulations must be optimized to prevent mobile browser lag, relying on efficient Canvas/WebGL rendering rather than complex DOM manipulation.
