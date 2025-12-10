@@ -1,0 +1,223 @@
+:root {
+  --primary-green: #00DD00;
+  --glow-green: #33FF33;
+  --dark-green: #003300;
+  --background: #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'VT323', monospace;
+  background: var(--background);
+  color: var(--primary-green);
+}
+
+#matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+.geometric-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.main-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.welcome-text {
+  font-size: clamp(3rem, 15vw, 10rem);
+  color: var(--primary-green);
+  text-shadow: 
+    0 0 10px var(--glow-green),
+    0 0 20px var(--glow-green),
+    0 0 40px var(--glow-green),
+    0 0 80px var(--primary-green);
+  letter-spacing: 0.2em;
+  animation: flicker 3s infinite;
+}
+
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    text-shadow: 
+      0 0 10px var(--glow-green),
+      0 0 20px var(--glow-green),
+      0 0 40px var(--glow-green),
+      0 0 80px var(--primary-green);
+  }
+  20%, 24%, 55% {
+    opacity: 0.8;
+    text-shadow: none;
+  }
+}
+
+.quote {
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  color: var(--primary-green);
+  text-shadow: 0 0 10px var(--glow-green);
+  margin-top: 1.5rem;
+  opacity: 0.9;
+  min-height: 2em;
+}
+
+.quote::after {
+  content: '_';
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.navigation {
+  position: relative;
+  margin-top: 2rem;
+}
+
+.nav-btn {
+  font-family: 'VT323', monospace;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  background: transparent;
+  border: 2px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 1rem 2rem;
+  cursor: pointer;
+  text-shadow: 0 0 10px var(--glow-green);
+  box-shadow: 
+    0 0 10px var(--dark-green),
+    inset 0 0 10px var(--dark-green);
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: var(--dark-green);
+  box-shadow: 
+    0 0 20px var(--glow-green),
+    inset 0 0 20px var(--dark-green);
+  text-shadow: 0 0 20px var(--glow-green);
+}
+
+.dropdown-terminal {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max(300px, 80vw);
+  max-width: 500px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 2px solid var(--primary-green);
+  margin-top: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  box-shadow: 
+    0 0 20px var(--dark-green),
+    inset 0 0 30px rgba(0, 51, 0, 0.3);
+}
+
+.dropdown-terminal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.terminal-header {
+  background: var(--dark-green);
+  padding: 0.8rem 1rem;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--primary-green);
+  text-shadow: 0 0 5px var(--glow-green);
+}
+
+.terminal-content {
+  padding: 1rem;
+}
+
+.project-link {
+  display: block;
+  color: var(--primary-green);
+  text-decoration: none;
+  font-size: 1.4rem;
+  padding: 0.8rem 1rem;
+  transition: all 0.2s ease;
+  text-shadow: 0 0 5px var(--glow-green);
+}
+
+.project-link:hover {
+  background: var(--dark-green);
+  color: var(--glow-green);
+  text-shadow: 0 0 15px var(--glow-green);
+  padding-left: 1.5rem;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 1rem;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  color: var(--primary-green);
+  opacity: 0.7;
+  text-shadow: 0 0 5px var(--glow-green);
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+  
+  .dropdown-terminal {
+    width: 90vw;
+  }
+}
