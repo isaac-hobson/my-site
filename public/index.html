@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMPULSIVE.CC</title>
+  <title>IMPULSIVE.CC - Professional Simulation Platform</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,28 +12,100 @@
   <div class="scanlines"></div>
   <div class="geometric-shapes" id="geometric-shapes"></div>
   
+  <div class="auth-nav" id="auth-nav">
+    <span id="user-info"></span>
+    <button class="auth-btn" id="login-btn">[ LOGIN ]</button>
+    <button class="auth-btn" id="register-btn">[ REGISTER ]</button>
+    <button class="auth-btn hidden" id="dashboard-btn">[ DASHBOARD ]</button>
+    <button class="auth-btn hidden" id="logout-btn">[ LOGOUT ]</button>
+  </div>
+  
   <div class="content">
     <header class="main-header">
-      <h1 class="welcome-text">WELCOME</h1>
+      <h1 class="welcome-text">IMPULSIVE.CC</h1>
+      <p class="tagline">Professional Mathematical Simulation Platform</p>
       <p class="quote" id="quote"></p>
     </header>
     
     <nav class="navigation">
-      <button class="nav-btn" id="projects-btn">[ PROJECTS ]</button>
+      <button class="nav-btn primary-btn" onclick="window.location.href='shapes.html'">[ LAUNCH SIMULATOR ]</button>
+      <button class="nav-btn" id="projects-btn">[ BROWSE GALLERY ]</button>
       <div class="dropdown-terminal" id="dropdown">
-        <div class="terminal-header">> AVAILABLE SIMULATIONS</div>
+        <div class="terminal-header">> SIMULATION CATEGORIES</div>
         <div class="terminal-content">
-          <a href="shapes.html" class="project-link">>> shapes.sim</a>
+          <a href="shapes.html?sim=0" class="project-link">>> Fractals & Patterns</a>
+          <a href="shapes.html?sim=4" class="project-link">>> Physics Simulations</a>
+          <a href="shapes.html?sim=6" class="project-link">>> AI & Networks</a>
+          <a href="shapes.html?sim=11" class="project-link">>> Chaos Theory</a>
+          <a href="shapes.html?sim=15" class="project-link">>> Nature & Biology</a>
         </div>
       </div>
     </nav>
     
+    <section class="features-section">
+      <h2 class="section-title">> PLATFORM FEATURES</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">[17]</div>
+          <h3>Mathematical Visualizations</h3>
+          <p>From fractals to physics simulations</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">[HD]</div>
+          <h3>High-Quality Export</h3>
+          <p>Save images up to 4K resolution</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">[++]</div>
+          <h3>Custom Presets</h3>
+          <p>Save and share your configurations</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">[RT]</div>
+          <h3>Real-Time Rendering</h3>
+          <p>60 FPS canvas animations</p>
+        </div>
+      </div>
+    </section>
+    
     <footer class="footer">
-      <p>> CONNECTION ESTABLISHED // IMPULSIVE.CC // DESIGNED BY ISAAC</p>
+      <p>> SYSTEM ONLINE // IMPULSIVE.CC // DESIGNED BY ISAAC</p>
+      <p class="version">v2.0.0 | Professional Edition</p>
     </footer>
+  </div>
+  
+  <div class="modal-overlay hidden" id="auth-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">X</button>
+      <h2 class="modal-title" id="modal-title">LOGIN</h2>
+      <form id="auth-form">
+        <div class="form-group hidden" id="displayname-group">
+          <label for="displayname">DISPLAY NAME</label>
+          <input type="text" id="displayname" name="displayname" placeholder="> Enter display name">
+        </div>
+        <div class="form-group hidden" id="email-group">
+          <label for="email">EMAIL</label>
+          <input type="email" id="email" name="email" placeholder="> Enter email address">
+        </div>
+        <div class="form-group">
+          <label for="username">USERNAME</label>
+          <input type="text" id="username" name="username" required placeholder="> Enter username">
+        </div>
+        <div class="form-group">
+          <label for="password">PASSWORD</label>
+          <input type="password" id="password" name="password" required placeholder="> Enter password">
+        </div>
+        <div class="form-error hidden" id="form-error"></div>
+        <button type="submit" class="submit-btn" id="submit-btn">[ AUTHENTICATE ]</button>
+      </form>
+      <p class="modal-switch" id="modal-switch">
+        Don't have an account? <a href="#" id="switch-link">Register</a>
+      </p>
+    </div>
   </div>
   
   <script src="matrix.js"></script>
   <script src="main.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>

@@ -223,6 +223,17 @@ export function setupRoutes(app: Express) {
     }
   });
 
+  // User profile
+  app.get("/api/users/me", requireAuth, async (req: Request, res: Response) => {
+    res.json({
+      id: req.user!.id,
+      username: req.user!.username,
+      email: req.user!.email,
+      displayName: req.user!.displayName,
+      role: req.user!.role,
+    });
+  });
+
   // Simulation types metadata
   app.get("/api/simulation-types", (req: Request, res: Response) => {
     res.json([

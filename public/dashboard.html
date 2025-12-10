@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMPULSIVE.CC/DASHBOARD</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanlines"></div>
+  
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <a href="index.html" class="back-link">&lt;&lt; HOME</a>
+      <h1 class="dashboard-title">> USER DASHBOARD</h1>
+      <div class="user-badge" id="user-badge"></div>
+    </header>
+    
+    <main class="dashboard-main">
+      <section class="dashboard-section">
+        <h2 class="section-title">> YOUR SIMULATIONS</h2>
+        <div class="simulations-grid" id="user-simulations">
+          <div class="loading-state">Loading simulations...</div>
+        </div>
+        <button class="create-btn" onclick="window.location.href='shapes.html'">
+          [ + CREATE NEW SIMULATION ]
+        </button>
+      </section>
+      
+      <section class="dashboard-section">
+        <h2 class="section-title">> FAVORITES</h2>
+        <div class="simulations-grid" id="user-favorites">
+          <div class="loading-state">Loading favorites...</div>
+        </div>
+      </section>
+      
+      <section class="dashboard-section">
+        <h2 class="section-title">> ACCOUNT SETTINGS</h2>
+        <div class="settings-panel">
+          <div class="setting-row">
+            <span class="setting-label">Username:</span>
+            <span class="setting-value" id="setting-username">-</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-label">Email:</span>
+            <span class="setting-value" id="setting-email">-</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-label">Display Name:</span>
+            <span class="setting-value" id="setting-displayname">-</span>
+          </div>
+          <div class="setting-row">
+            <span class="setting-label">Role:</span>
+            <span class="setting-value" id="setting-role">-</span>
+          </div>
+          <button class="logout-btn" id="logout-btn">[ LOGOUT ]</button>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <script src="matrix.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

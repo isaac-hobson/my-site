@@ -44,7 +44,11 @@ export const favorites = pgTable("favorites", {
   userId: integer("user_id").references(() => users.id).notNull(),
   simulationId: integer("simulation_id").references(() => simulations.id).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (table) => ({
+  uniqueFavorite: {
+    columns: [table.userId, table.simulationId],
+  },
+}));
 
 export const usersRelations = relations(users, ({ many }) => ({
   simulations: many(simulations),

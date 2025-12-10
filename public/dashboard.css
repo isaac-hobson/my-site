@@ -1,0 +1,217 @@
+.dashboard-container {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--primary-green);
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  color: var(--glow-green);
+  text-shadow: 0 0 15px var(--glow-green);
+}
+
+.user-badge {
+  font-size: 1.2rem;
+  color: var(--primary-green);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary-green);
+  text-shadow: 0 0 5px var(--glow-green);
+}
+
+.dashboard-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  color: var(--glow-green);
+  text-shadow: 0 0 10px var(--glow-green);
+  margin-bottom: 1.5rem;
+}
+
+.simulations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.simulation-card {
+  background: rgba(0, 15, 0, 0.8);
+  border: 1px solid var(--primary-green);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.simulation-card:hover {
+  box-shadow: 0 0 20px var(--glow-green);
+  transform: translateY(-3px);
+}
+
+.sim-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.sim-card-name {
+  font-size: 1.3rem;
+  color: var(--glow-green);
+  margin: 0;
+}
+
+.sim-card-type {
+  font-size: 0.9rem;
+  color: var(--primary-green);
+  opacity: 0.7;
+}
+
+.sim-card-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  margin-top: 1rem;
+}
+
+.sim-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.sim-action-btn {
+  flex: 1;
+  font-family: 'VT323', monospace;
+  font-size: 0.9rem;
+  background: transparent;
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sim-action-btn:hover {
+  background: var(--dark-green);
+}
+
+.sim-action-btn.danger {
+  border-color: #ff4444;
+  color: #ff6666;
+}
+
+.sim-action-btn.danger:hover {
+  background: rgba(100, 0, 0, 0.5);
+}
+
+.create-btn {
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  background: var(--dark-green);
+  border: 2px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 1rem 2rem;
+  cursor: pointer;
+  text-shadow: 0 0 5px var(--glow-green);
+  box-shadow: 0 0 15px var(--glow-green);
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.create-btn:hover {
+  background: var(--primary-green);
+  color: var(--background);
+}
+
+.settings-panel {
+  background: rgba(0, 15, 0, 0.8);
+  border: 1px solid var(--primary-green);
+  padding: 1.5rem;
+  max-width: 500px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--dark-green);
+}
+
+.setting-row:last-of-type {
+  border-bottom: none;
+}
+
+.setting-label {
+  color: var(--primary-green);
+  opacity: 0.8;
+}
+
+.setting-value {
+  color: var(--glow-green);
+}
+
+.logout-btn {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  background: transparent;
+  border: 1px solid #ff4444;
+  color: #ff6666;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(100, 0, 0, 0.5);
+}
+
+.loading-state {
+  color: var(--primary-green);
+  opacity: 0.6;
+  font-style: italic;
+  padding: 2rem;
+  text-align: center;
+}
+
+.empty-state {
+  color: var(--primary-green);
+  opacity: 0.5;
+  padding: 2rem;
+  text-align: center;
+  border: 1px dashed var(--dark-green);
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .simulations-grid {
+    grid-template-columns: 1fr;
+  }
+}

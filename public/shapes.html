@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMPULSIVE.CC/SHAPES</title>
+  <title>IMPULSIVE.CC/SIMULATOR</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="shapes.css">
@@ -12,12 +12,19 @@
   <canvas id="matrix-canvas"></canvas>
   <div class="scanlines"></div>
   
+  <div class="toolbar" id="toolbar">
+    <a href="index.html" class="toolbar-btn">&lt;&lt; HOME</a>
+    <span class="toolbar-divider">|</span>
+    <span class="sim-name" id="current-sim-name">Evolving Star Fractal</span>
+    <span class="toolbar-divider">|</span>
+    <button class="toolbar-btn" id="export-btn" title="Export Image (E)">[ EXPORT ]</button>
+    <button class="toolbar-btn" id="save-btn" title="Save Preset (S)">[ SAVE ]</button>
+    <button class="toolbar-btn" id="fullscreen-btn" title="Fullscreen (F)">[ FULLSCREEN ]</button>
+    <span class="toolbar-divider">|</span>
+    <span class="fps-counter" id="fps-counter">60 FPS</span>
+  </div>
+  
   <div class="shapes-container">
-    <header class="shapes-header">
-      <a href="index.html" class="back-link">&lt;&lt; RETURN TO BASE</a>
-      <h1 class="page-path">impulsive.cc/shapes</h1>
-    </header>
-    
     <main class="simulator-main">
       <canvas id="sim-canvas"></canvas>
       
@@ -93,11 +100,83 @@
             </div>
           </div>
         </div>
+        
+        <div class="panel-section" id="presets-section">
+          <div class="section-header" data-section="presets">> SAVED PRESETS</div>
+          <div class="section-content" id="presets">
+            <div class="presets-list" id="presets-list">
+              <p class="no-presets">No saved presets yet</p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
   
+  <div class="modal-overlay hidden" id="export-modal">
+    <div class="modal-content export-modal-content">
+      <button class="modal-close" id="export-modal-close">X</button>
+      <h2 class="modal-title">> EXPORT IMAGE</h2>
+      <div class="export-preview" id="export-preview"></div>
+      <div class="export-options">
+        <div class="form-group">
+          <label>RESOLUTION</label>
+          <select id="export-resolution">
+            <option value="1">Current Size</option>
+            <option value="2">2x (HD)</option>
+            <option value="4">4x (4K)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>FORMAT</label>
+          <select id="export-format">
+            <option value="png">PNG (Lossless)</option>
+            <option value="jpeg">JPEG (Smaller)</option>
+            <option value="webp">WebP (Modern)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>FILENAME</label>
+          <input type="text" id="export-filename" placeholder="simulation">
+        </div>
+      </div>
+      <button class="submit-btn" id="export-download">[ DOWNLOAD ]</button>
+    </div>
+  </div>
+  
+  <div class="modal-overlay hidden" id="save-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="save-modal-close">X</button>
+      <h2 class="modal-title">> SAVE PRESET</h2>
+      <form id="save-form">
+        <div class="form-group">
+          <label>PRESET NAME</label>
+          <input type="text" id="preset-name" placeholder="> Enter preset name" required>
+        </div>
+        <div class="form-group">
+          <label>DESCRIPTION (Optional)</label>
+          <input type="text" id="preset-description" placeholder="> Describe this configuration">
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" id="preset-public"> Make Public
+          </label>
+        </div>
+        <div class="form-error hidden" id="save-error"></div>
+        <button type="submit" class="submit-btn">[ SAVE PRESET ]</button>
+      </form>
+      <p class="login-prompt hidden" id="login-prompt">
+        <a href="index.html">Login</a> to save presets to your account
+      </p>
+    </div>
+  </div>
+  
+  <div class="keyboard-hint" id="keyboard-hint">
+    <p>Keyboard: [1-9] Simulations | [E] Export | [S] Save | [F] Fullscreen | [M] Modify Panel | [Space] Pause</p>
+  </div>
+  
   <script src="matrix.js"></script>
   <script src="simulations.js"></script>
+  <script src="simulator-ui.js"></script>
 </body>
 </html>

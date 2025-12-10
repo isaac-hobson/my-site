@@ -1,21 +1,107 @@
-# Impulsive.cc
+# Impulsive.cc - Professional Simulation Platform
 
 ## Overview
-A retro-terminal themed personal website with CRT/Matrix aesthetic effects. Features a dramatic homepage and an interactive shapes simulator with 17 complex mathematical visualizations.
+A professional-grade full-stack mathematical simulation platform with retro-terminal CRT/Matrix aesthetic. Features user authentication, preset saving/sharing, high-quality image export, and 17 complex mathematical visualizations. Designed for data scientists, computational artists, and R&D teams.
+
+## Tech Stack
+- **Backend**: Node.js + Express + TypeScript
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Passport.js with local strategy + bcrypt
+- **Frontend**: Vanilla JS with Canvas API
+- **Styling**: CSS with CRT/Matrix visual effects
 
 ## Project Structure
 ```
 /
-├── index.html       # Homepage with welcome text, projects dropdown
-├── shapes.html      # Simulator page with 17 mathematical visualizations
-├── styles.css       # Main styles (shared across pages)
-├── shapes.css       # Simulator-specific styles
-├── matrix.js        # Matrix rain background animation
-├── main.js          # Homepage interactions (typing effect, dropdown)
-├── simulations.js   # All 17 mathematical simulation implementations
-├── server.py        # Python static file server
-└── .gitignore       # Python ignores
+├── server/              # Backend source
+│   ├── index.ts         # Express server entry point
+│   ├── auth.ts          # Passport authentication setup
+│   ├── routes.ts        # API route handlers
+│   ├── storage.ts       # Database storage layer
+│   └── db.ts            # Database connection
+├── shared/
+│   └── schema.ts        # Drizzle ORM schema definitions
+├── public/              # Frontend static files
+│   ├── index.html       # Homepage with auth UI
+│   ├── shapes.html      # Simulator page
+│   ├── dashboard.html   # User dashboard
+│   ├── styles.css       # Main styles
+│   ├── shapes.css       # Simulator styles
+│   ├── dashboard.css    # Dashboard styles
+│   ├── matrix.js        # Matrix rain animation
+│   ├── main.js          # Homepage interactions
+│   ├── auth.js          # Authentication UI
+│   ├── simulations.js   # 17 simulation implementations
+│   ├── simulator-ui.js  # Simulator controls/export
+│   └── dashboard.js     # Dashboard functionality
+├── package.json         # Dependencies
+├── tsconfig.json        # TypeScript config
+└── drizzle.config.ts    # Database migration config
 ```
+
+## Database Schema
+- **users**: id, username, email, password, displayName, role, createdAt, lastLoginAt
+- **simulations**: id, userId, name, description, simulationType, isPublic, isFeatured, viewCount, createdAt, updatedAt
+- **presets**: id, simulationId, name, hue, decay, speed, zoom, spokes, winding, customParams, createdAt
+- **favorites**: id, userId, simulationId, createdAt
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Create new account
+- `POST /api/auth/login` - Login with username/password
+- `POST /api/auth/logout` - Logout current session
+- `GET /api/auth/user` - Get current authenticated user
+
+### Simulations
+- `GET /api/simulations` - List public simulations
+- `GET /api/simulations/featured` - List featured simulations
+- `GET /api/simulations/:id` - Get simulation details
+- `POST /api/simulations` - Create simulation (auth required)
+- `PUT /api/simulations/:id` - Update simulation (owner only)
+- `DELETE /api/simulations/:id` - Delete simulation (owner only)
+- `GET /api/user/simulations` - List user's simulations (auth required)
+
+### Presets
+- `GET /api/simulations/:id/presets` - Get presets for simulation
+- `POST /api/simulations/:id/presets` - Create preset (owner only)
+- `DELETE /api/presets/:id` - Delete preset (owner only)
+
+### Favorites
+- `GET /api/user/favorites` - Get user's favorites (auth required)
+- `POST /api/simulations/:id/favorite` - Add to favorites (auth required)
+- `DELETE /api/simulations/:id/favorite` - Remove from favorites (auth required)
+
+### Misc
+- `GET /api/simulation-types` - Get list of all simulation types
+- `POST /api/export` - Export image data
+
+## Simulations (17 Types)
+0. Evolving Star Fractal - dynamic star/spiral transitions
+1. Hyperspace Web - 3D projected rotating point web
+2. Lissajous Cascade - overlapping curves with prime ratios
+3. Magnetic Field Tracer - particles following noise-based fields
+4. Asymmetric Orbitals - gravitational n-body simulation
+5. Reaction-Diffusion Ring - multi-ring cellular automata
+6. Neural Network - animated neural network visualization
+7. Flocking Swarm - boid flocking algorithm
+8. Fractal Tree - animated recursive tree with wind
+9. Galaxy Spiral - rotating spiral galaxy with stars
+10. Quantum Wave - layered sine wave interference
+11. Strange Attractor - Lorenz attractor visualization
+12. Sacred Geometry - pulsing hexagonal layers
+13. Electric Plasma - lightning bolt plasma ball
+14. Infinite Zoom - endless zooming polygons
+15. Bioluminescence - floating jellyfish with tentacles
+16. DNA Helix - rotating double helix structure
+
+## Keyboard Shortcuts (Simulator)
+- `1-9` - Switch between first 9 simulations
+- `E` - Open export modal
+- `S` - Open save preset modal
+- `F` - Toggle fullscreen
+- `M` - Toggle modify panel
+- `Space` - Pause/resume animation
 
 ## Design Philosophy
 "High-Contrast Retro-Terminal Performance"
@@ -24,56 +110,13 @@ A retro-terminal themed personal website with CRT/Matrix aesthetic effects. Feat
 - Effects: CRT scanlines, matrix rain, floating geometric shapes
 - Canvas: Glossy black background with subtle green border glow
 
-## Pages
-
-### Homepage (index.html)
-- Glowing "WELCOME" header with flicker animation
-- Typing quote animation: "the truth finds those who seek"
-- Projects dropdown with terminal styling
-- Matrix rain background + floating shapes
-- Footer: "CONNECTION ESTABLISHED // IMPULSIVE.CC // DESIGNED BY ISAAC"
-
-### Shapes Simulator (shapes.html)
-- Full-screen canvas with glossy black backdrop
-- Collapsible control panel (MODIFY button)
-- 17 simulations:
-  1. Evolving Star Fractal - dynamic star/spiral transitions
-  2. Hyperspace Web - 3D projected rotating point web
-  3. Lissajous Cascade - overlapping curves with prime ratios
-  4. Magnetic Field Tracer - particles following noise-based fields
-  5. Asymmetric Orbitals - gravitational n-body simulation
-  6. Reaction-Diffusion Ring - multi-ring cellular automata
-  7. Neural Network - animated neural network visualization
-  8. Flocking Swarm - boid flocking algorithm
-  9. Fractal Tree - animated recursive tree with wind
-  10. Galaxy Spiral - rotating spiral galaxy with stars
-  11. Quantum Wave - layered sine wave interference
-  12. Strange Attractor - Lorenz attractor visualization
-  13. Sacred Geometry - pulsing hexagonal layers
-  14. Electric Plasma - lightning bolt plasma ball
-  15. Infinite Zoom - endless zooming polygons
-  16. Bioluminescence - floating jellyfish with tentacles
-  17. DNA Helix - rotating double helix structure
-
-### Adjustable Parameters
-- COLOR HUE: Primary color cycle (0-360)
-- TRAIL DECAY: Path persistence
-- GLOBAL SPEED: Animation speed multiplier
-- ZOOM MAGNITUDE: Size oscillation intensity
-- N-SPOKES (A): Star fractal spokes
-- WINDING (B): Spiral winding factor
-
-## Adding New Pages
-To add new pages:
-1. Create new HTML file (copy structure from shapes.html)
-2. Include shared styles.css and matrix.js
-3. Add navigation link in homepage dropdown
-
-## Adding New Simulations
-To add a new simulation:
-1. Add simulation function in simulations.js (sim##_Name pattern)
-2. Add to simulations array at bottom of file
-3. Add button in shapes.html with data-sim attribute
+## Development Commands
+```bash
+npm run dev      # Start development server
+npm run db:push  # Push schema changes to database
+npm run build    # Build for production
+npm start        # Run production server
+```
 
 ## Running
-Static file server on port 5000. No build step required.
+Express server on port 5000 serving static files from public/ folder.

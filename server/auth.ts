@@ -22,8 +22,18 @@ declare global {
 }
 
 export function setupAuth(app: Express) {
+  if (process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+  }
+  
+  const sessionSecret = process.env.SESSION_SECRET || (
+    process.env.NODE_ENV === "production" 
+      ? (() => { throw new Error("SESSION_SECRET is required in production"); })()
+      : "dev-session-secret-not-for-production"
+  );
+  
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "impulsive-cc-secret-key-change-in-production",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: new MemoryStore({
@@ -32,7 +42,8 @@ export function setupAuth(app: Express) {
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     },
   };
 
