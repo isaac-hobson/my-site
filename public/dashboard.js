@@ -220,21 +220,46 @@ const Dashboard = {
       return;
     }
     
-    container.innerHTML = presets.map(preset => `
-      <div class="preset-card" data-id="${this.escapeAttr(preset.id)}">
-        <div class="preset-info">
-          <span class="preset-name">${this.escapeHtml(preset.name)}</span>
-          <span class="preset-sim">${this.simulationTypes[preset.simulationType] || 'Unknown'}</span>
-        </div>
-        <div class="preset-params">
-          Hue: ${this.escapeAttr(preset.hue)} | Speed: ${this.escapeAttr(preset.speed)} | Zoom: ${this.escapeAttr(preset.zoom)}
-        </div>
-        <div class="preset-actions">
-          <button class="sim-action-btn preset-view-btn" data-sim-type="${this.escapeAttr(preset.simulationType)}" data-preset-id="${this.escapeAttr(preset.id)}">[ VIEW ]</button>
-          <button class="sim-action-btn danger preset-delete-btn" data-preset-id="${this.escapeAttr(preset.id)}">[ DELETE ]</button>
-        </div>
-      </div>
-    `).join('');
+    container.innerHTML = '';
+    presets.forEach(preset => {
+      const card = document.createElement('div');
+      card.className = 'preset-card';
+      card.dataset.id = preset.id;
+
+      const info = document.createElement('div');
+      info.className = 'preset-info';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'preset-name';
+      nameSpan.textContent = preset.name;
+      const simSpan = document.createElement('span');
+      simSpan.className = 'preset-sim';
+      simSpan.textContent = this.simulationTypes[preset.simulationType] || 'Unknown';
+      info.appendChild(nameSpan);
+      info.appendChild(simSpan);
+
+      const params = document.createElement('div');
+      params.className = 'preset-params';
+      params.textContent = `Hue: ${preset.hue} | Speed: ${preset.speed} | Zoom: ${preset.zoom}`;
+
+      const actions = document.createElement('div');
+      actions.className = 'preset-actions';
+      const viewBtn = document.createElement('button');
+      viewBtn.className = 'sim-action-btn preset-view-btn';
+      viewBtn.dataset.simType = preset.simulationType;
+      viewBtn.dataset.presetId = preset.id;
+      viewBtn.textContent = '[ VIEW ]';
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'sim-action-btn danger preset-delete-btn';
+      deleteBtn.dataset.presetId = preset.id;
+      deleteBtn.textContent = '[ DELETE ]';
+      actions.appendChild(viewBtn);
+      actions.appendChild(deleteBtn);
+
+      card.appendChild(info);
+      card.appendChild(params);
+      card.appendChild(actions);
+      container.appendChild(card);
+    });
 
     container.querySelectorAll('.preset-view-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
