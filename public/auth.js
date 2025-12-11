@@ -19,6 +19,7 @@ const AuthManager = {
   },
   
   setupEventListeners() {
+    console.log('Auth.js setting up event listeners');
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
     const logoutBtn = document.getElementById('logout-btn');
@@ -27,13 +28,20 @@ const AuthManager = {
     const authForm = document.getElementById('auth-form');
     const switchLink = document.getElementById('switch-link');
     
+    console.log('Login button found:', !!loginBtn);
+    console.log('Register button found:', !!registerBtn);
+    
     const addTouchAndClick = (el, handler) => {
       if (!el) return;
-      el.addEventListener('click', handler);
-      el.addEventListener('touchend', (e) => {
-        e.preventDefault();
+      el.addEventListener('click', (e) => {
+        console.log('Click event on', el.id || el.className);
         handler(e);
       });
+      el.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        console.log('Touch event on', el.id || el.className);
+        handler(e);
+      }, { passive: false });
     };
     
     addTouchAndClick(loginBtn, () => this.showModal('login'));

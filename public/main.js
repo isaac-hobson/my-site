@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Main.js loaded successfully');
+  
   const quote = "the truth finds those who seek";
   const quoteElement = document.getElementById('quote');
   
@@ -20,14 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const dropdown = document.getElementById('dropdown');
   const launchBtn = document.getElementById('launch-btn');
   
+  console.log('Launch button found:', !!launchBtn);
+  console.log('Projects button found:', !!projectsBtn);
+  
   if (projectsBtn && dropdown) {
     const toggleDropdown = (e) => {
       e.preventDefault();
       e.stopPropagation();
+      console.log('Projects button clicked/touched');
       dropdown.classList.toggle('active');
     };
     projectsBtn.addEventListener('click', toggleDropdown);
-    projectsBtn.addEventListener('touchend', toggleDropdown);
+    projectsBtn.addEventListener('touchstart', toggleDropdown, { passive: false });
     
     document.addEventListener('click', (e) => {
       if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
@@ -39,10 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (launchBtn) {
     const handleLaunch = (e) => {
       e.preventDefault();
+      console.log('Launch button clicked/touched');
       launchSimulator();
     };
     launchBtn.addEventListener('click', handleLaunch);
-    launchBtn.addEventListener('touchend', handleLaunch);
+    launchBtn.addEventListener('touchstart', handleLaunch, { passive: false });
   }
   
   if (document.getElementById('geometric-shapes')) {
