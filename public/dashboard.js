@@ -2,6 +2,7 @@ const Dashboard = {
   user: null,
   simulations: [],
   favorites: [],
+  presets: [],
   
   simulationTypes: [
     'Evolving Star Fractal', 'Hyperspace Web', 'Lissajous Cascade',
@@ -56,7 +57,8 @@ const Dashboard = {
   async loadUserData() {
     await Promise.all([
       this.loadSimulations(),
-      this.loadFavorites()
+      this.loadFavorites(),
+      this.loadPresets()
     ]);
   },
   
@@ -142,6 +144,71 @@ const Dashboard = {
     } catch (err) {
       console.error('Delete failed:', err);
       alert('Error deleting simulation');
+    }
+  },
+  
+  async loadPresets() {
+    const container = document.getElementById('user-presets');
+    if (!container) return;
+    
+    try {
+      const res = await fetch('/api/user/presets', { credentials: 'include' });
+      if (res.ok) {
+        this.presets = await res.json();
+        this.renderPresets(container, this.presets);
+      } else {
+        container.innerHTML = '<div class="empty-state">Failed to load presets</div>';
+      }
+    } catch (err) {
+      console.error('Failed to load presets:', err);
+      container.innerHTML = '<div class="empty-state">Error loading presets</div>';
+    }
+  },
+  
+  renderPresets(container, presets) {
+    if (presets.length === 0) {
+      container.innerHTML = '<div class="empty-state">No presets saved yet. Create presets from the simulator!</div>';
+      return;
+    }
+    
+    container.innerHTML = presets.map(preset => `
+      <div class="preset-card" data-id="${preset.id}">
+        <div class="preset-info">
+          <span class="preset-name">${this.escapeHtml(preset.name)}</span>
+          <span class="preset-sim">${this.simulationTypes[preset.simulationType] || 'Unknown'}</span>
+        </div>
+        <div class="preset-params">
+          Hue: ${preset.hue} | Speed: ${preset.speed} | Zoom: ${preset.zoom}
+        </div>
+        <div class="preset-actions">
+          <button class="sim-action-btn" onclick="Dashboard.viewPreset(${preset.simulationType}, ${preset.id})">[ VIEW ]</button>
+          <button class="sim-action-btn danger" onclick="Dashboard.deletePreset(${preset.id})">[ DELETE ]</button>
+        </div>
+      </div>
+    `).join('');
+  },
+  
+  viewPreset(simType, presetId) {
+    window.location.href = `/shapes.html?sim=${simType}&preset=${presetId}`;
+  },
+  
+  async deletePreset(id) {
+    if (!confirm('Are you sure you want to delete this preset?')) return;
+    
+    try {
+      const res = await fetch(`/api/presets/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      
+      if (res.ok) {
+        await this.loadPresets();
+      } else {
+        alert('Failed to delete preset');
+      }
+    } catch (err) {
+      console.error('Delete failed:', err);
+      alert('Error deleting preset');
     }
   },
   

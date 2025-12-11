@@ -2,6 +2,8 @@ const SimulatorUI = {
   user: null,
   isPaused: false,
   currentSimulation: 0,
+  currentSimulationId: null,
+  isFavorited: false,
   frameCount: 0,
   lastFpsUpdate: 0,
   
@@ -126,6 +128,7 @@ const SimulatorUI = {
     document.getElementById('save-form')?.addEventListener('submit', (e) => this.handleSave(e));
     
     document.getElementById('fullscreen-btn')?.addEventListener('click', () => this.toggleFullscreen());
+    document.getElementById('fav-btn')?.addEventListener('click', () => this.toggleFavorite());
     
     document.getElementById('export-modal')?.addEventListener('click', (e) => {
       if (e.target.id === 'export-modal') this.hideExportModal();
@@ -298,9 +301,10 @@ const SimulatorUI = {
         })
       });
       
+      this.currentSimulationId = simulation.id;
       this.hideSaveModal();
       this.loadUserPresets();
-      alert('Preset saved successfully!');
+      alert('Preset saved successfully! You can now add it to favorites.');
     } catch (err) {
       document.getElementById('save-error').textContent = err.message;
       document.getElementById('save-error').classList.remove('hidden');
@@ -445,6 +449,68 @@ const SimulatorUI = {
       console.error('Error deleting preset:', err);
       alert('Failed to delete preset');
     }
+  },
+
+  async toggleFavorite() {
+    if (!this.user) {
+      alert('Please login to add favorites');
+      return;
+    }
+
+    if (!this.currentSimulationId) {
+      alert('Save this simulation first to add it to favorites');
+      return;
+    }
+
+    const favBtn = document.getElementById('fav-btn');
+    
+    try {
+      if (this.isFavorited) {
+        const res = await fetch(`/api/simulations/${this.currentSimulationId}/favorite`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        if (res.ok) {
+          this.isFavorited = false;
+          if (favBtn) favBtn.textContent = '[ FAV ]';
+          alert('Removed from favorites');
+        }
+      } else {
+        const res = await fetch(`/api/simulations/${this.currentSimulationId}/favorite`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+        if (res.ok) {
+          this.isFavorited = true;
+          if (favBtn) favBtn.textContent = '[ UNFAV ]';
+          alert('Added to favorites!');
+        }
+      }
+    } catch (err) {
+      console.error('Error toggling favorite:', err);
+      alert('Failed to update favorites');
+    }
+  },
+
+  async checkFavoriteStatus(simId) {
+    if (!this.user || !simId) return;
+
+    try {
+      const res = await fetch(`/api/simulations/${simId}/is-favorite`, { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        this.isFavorited = data.isFavorite;
+        const favBtn = document.getElementById('fav-btn');
+        if (favBtn) favBtn.textContent = this.isFavorited ? '[ UNFAV ]' : '[ FAV ]';
+      }
+    } catch (err) {
+      console.error('Error checking favorite status:', err);
+    }
+  },
+
+  setCurrentSimulationId(simId) {
+    this.currentSimulationId = simId;
+    this.checkFavoriteStatus(simId);
   }
 };
 

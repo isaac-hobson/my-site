@@ -206,6 +206,53 @@
   border: 1px dashed var(--dark-green);
 }
 
+.presets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.preset-card {
+  background: rgba(0, 15, 0, 0.8);
+  border: 1px solid var(--primary-green);
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.preset-card:hover {
+  box-shadow: 0 0 15px var(--glow-green);
+}
+
+.preset-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.preset-name {
+  font-size: 1.2rem;
+  color: var(--glow-green);
+}
+
+.preset-sim {
+  font-size: 0.9rem;
+  color: var(--primary-green);
+  opacity: 0.7;
+}
+
+.preset-params {
+  font-size: 0.85rem;
+  color: var(--primary-green);
+  opacity: 0.6;
+  margin-bottom: 0.8rem;
+}
+
+.preset-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 1rem;
