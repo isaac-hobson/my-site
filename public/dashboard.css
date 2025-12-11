@@ -4,6 +4,7 @@
   min-height: 100vh;
   padding: 2rem;
   overflow-y: auto;
+  pointer-events: auto;
 }
 
 .dashboard-header {
@@ -134,6 +135,11 @@
   box-shadow: 0 0 15px var(--glow-green);
   transition: all 0.3s ease;
   margin-top: 1rem;
+  position: relative;
+  z-index: 20;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
 }
 
 .create-btn:hover {
