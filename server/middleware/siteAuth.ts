@@ -7,6 +7,13 @@ export function sitePasswordMiddleware(req: Request, res: Response, next: NextFu
     return next();
   }
 
+  const staticExtensions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot'];
+  const isStaticFile = staticExtensions.some(ext => req.path.endsWith(ext));
+  
+  if (isStaticFile) {
+    return next();
+  }
+
   if (req.session && (req.session as any).siteAuthenticated) {
     return next();
   }

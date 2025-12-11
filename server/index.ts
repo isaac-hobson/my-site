@@ -41,15 +41,21 @@ setupSiteAuth(app);
 app.use(sitePasswordMiddleware);
 setupRoutes(app);
 
-app.use(express.static(path.join(__dirname, "..", "public"), {
+const publicPath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, "..", "public")
+  : path.join(__dirname, "..", "public");
+
+app.use(express.static(publicPath, {
   setHeaders: (res) => {
     res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
   },
 }));
 
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+    res.sendFile(path.join(publicPath, "index.html"));
   }
 });
 
