@@ -1,0 +1,302 @@
+:root {
+  --primary-green: #00DD00;
+  --glow-green: #33FF33;
+  --dark-green: #003300;
+  --background: #000000;
+  --red-matrix: #FF0033;
+  --glow-red: #FF3366;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'VT323', monospace;
+  background: var(--background);
+  color: var(--primary-green);
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#star-canvas {
+  z-index: 1;
+}
+
+#matrix-canvas {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#matrix-canvas.active {
+  opacity: 0.6;
+}
+
+#solar-canvas {
+  z-index: 3;
+}
+
+.controls-container {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 100;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 95%;
+  padding: 0.5rem;
+}
+
+.control-btn {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  text-shadow: 0 0 5px var(--glow-green);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 221, 0, 0.3);
+  user-select: none;
+}
+
+.control-btn:hover,
+.control-btn:active {
+  background: var(--dark-green);
+  box-shadow: 0 0 15px var(--glow-green);
+  text-shadow: 0 0 10px var(--glow-green);
+}
+
+.control-btn.active {
+  background: var(--dark-green);
+  box-shadow: 0 0 15px var(--glow-green);
+}
+
+.matrix-btn.active {
+  border-color: var(--red-matrix);
+  color: var(--red-matrix);
+  text-shadow: 0 0 5px var(--glow-red);
+  box-shadow: 0 0 15px var(--red-matrix);
+}
+
+.home-btn {
+  background: rgba(0, 51, 0, 0.9);
+}
+
+.settings-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 10, 0, 0.95);
+  border: 2px solid var(--primary-green);
+  padding: 0;
+  width: 90%;
+  max-width: 350px;
+  z-index: 200;
+  box-shadow: 0 0 30px var(--glow-green);
+}
+
+.settings-panel.hidden {
+  display: none;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: var(--dark-green);
+  border-bottom: 1px solid var(--primary-green);
+  font-size: 1.1rem;
+  color: var(--glow-green);
+  text-shadow: 0 0 5px var(--glow-green);
+}
+
+.close-settings {
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
+  background: transparent;
+  border: none;
+  color: var(--primary-green);
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.close-settings:hover {
+  color: var(--glow-green);
+  text-shadow: 0 0 10px var(--glow-green);
+}
+
+.settings-content {
+  padding: 1rem;
+}
+
+.setting-group {
+  margin-bottom: 1rem;
+}
+
+.setting-group label {
+  display: block;
+  font-size: 1rem;
+  color: var(--primary-green);
+  margin-bottom: 0.4rem;
+  text-shadow: 0 0 3px var(--glow-green);
+}
+
+.setting-group input[type="range"] {
+  width: calc(100% - 50px);
+  height: 8px;
+  background: var(--dark-green);
+  border: 1px solid var(--primary-green);
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.setting-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--primary-green);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--glow-green);
+}
+
+.setting-group input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--primary-green);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px var(--glow-green);
+}
+
+.setting-value {
+  display: inline-block;
+  width: 40px;
+  text-align: right;
+  color: var(--glow-green);
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+
+.reset-btn {
+  width: 100%;
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  background: transparent;
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.7rem;
+  cursor: pointer;
+  text-shadow: 0 0 5px var(--glow-green);
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.reset-btn:hover {
+  background: var(--dark-green);
+  box-shadow: 0 0 15px var(--glow-green);
+}
+
+.status-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(2rem, 8vw, 5rem);
+  color: var(--glow-green);
+  text-shadow: 
+    0 0 10px var(--glow-green),
+    0 0 20px var(--glow-green),
+    0 0 40px var(--glow-green);
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  letter-spacing: 0.2em;
+  font-weight: bold;
+}
+
+.status-message.show {
+  opacity: 1;
+}
+
+.status-message.red {
+  color: var(--red-matrix);
+  text-shadow: 
+    0 0 10px var(--red-matrix),
+    0 0 20px var(--red-matrix),
+    0 0 40px var(--red-matrix);
+}
+
+@media (max-width: 600px) {
+  .controls-container {
+    bottom: 0.8rem;
+    gap: 0.4rem;
+    padding: 0.3rem;
+  }
+  
+  .control-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.7rem;
+  }
+  
+  .settings-panel {
+    width: 95%;
+    max-width: none;
+  }
+  
+  .settings-header {
+    font-size: 1rem;
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .settings-content {
+    padding: 0.8rem;
+  }
+  
+  .setting-group {
+    margin-bottom: 0.8rem;
+  }
+  
+  .setting-group label {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .control-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  #rotate-view-btn {
+    display: none;
+  }
+}

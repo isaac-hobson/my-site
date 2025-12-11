@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>IMPULSIVE.CC - Solar System Simulation</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="solar.css">
+</head>
+<body>
+  <canvas id="star-canvas"></canvas>
+  <canvas id="matrix-canvas"></canvas>
+  <canvas id="solar-canvas"></canvas>
+  
+  <div class="status-message" id="status-message"></div>
+  
+  <div class="controls-container">
+    <a href="/" class="control-btn home-btn" title="Home">[ HOME ]</a>
+    
+    <button class="control-btn" id="play-pause-btn" title="Play/Pause">[ PAUSE ]</button>
+    
+    <button class="control-btn" id="rotate-view-btn" title="Toggle View Rotation">[ ROTATE VIEW: OFF ]</button>
+    
+    <button class="control-btn matrix-btn" id="matrix-btn" title="Toggle Matrix Rain">[ MATRIX ]</button>
+    
+    <button class="control-btn" id="settings-btn" title="Settings">[ SETTINGS ]</button>
+  </div>
+  
+  <div class="settings-panel hidden" id="settings-panel">
+    <div class="settings-header">
+      <span>> SOLAR SYSTEM SETTINGS</span>
+      <button class="close-settings" id="close-settings">X</button>
+    </div>
+    <div class="settings-content">
+      <div class="setting-group">
+        <label for="orbit-speed">Orbit Speed</label>
+        <input type="range" id="orbit-speed" min="1" max="200" value="50">
+        <span class="setting-value" id="orbit-speed-val">50</span>
+      </div>
+      
+      <div class="setting-group">
+        <label for="planet-scale">Planet Scale</label>
+        <input type="range" id="planet-scale" min="50" max="200" value="100">
+        <span class="setting-value" id="planet-scale-val">100</span>
+      </div>
+      
+      <div class="setting-group">
+        <label for="orbit-scale">Orbit Scale</label>
+        <input type="range" id="orbit-scale" min="50" max="150" value="100">
+        <span class="setting-value" id="orbit-scale-val">100</span>
+      </div>
+      
+      <div class="setting-group">
+        <label for="star-density">Star Density</label>
+        <input type="range" id="star-density" min="50" max="500" value="200">
+        <span class="setting-value" id="star-density-val">200</span>
+      </div>
+      
+      <div class="setting-group">
+        <label for="rotation-speed">View Rotation Speed</label>
+        <input type="range" id="rotation-speed" min="1" max="100" value="20">
+        <span class="setting-value" id="rotation-speed-val">20</span>
+      </div>
+      
+      <button class="reset-btn" id="reset-settings">[ RESET DEFAULTS ]</button>
+    </div>
+  </div>
+  
+  <script src="solar.js?v=20251211"></script>
+</body>
+</html>
