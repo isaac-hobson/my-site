@@ -232,7 +232,10 @@ const SimulatorUI = {
     const link = document.createElement('a');
     link.download = `${filename}.${format}`;
     link.href = dataUrl;
+    link.style.display = 'none';
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     
     this.hideExportModal();
   },

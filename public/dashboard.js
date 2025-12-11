@@ -117,7 +117,9 @@ const Dashboard = {
         </div>
         <div class="sim-card-actions">
           <button class="sim-action-btn sim-view-btn" data-sim-type="${sim.simulationType}">[ VIEW ]</button>
-          ${!isFavorites ? `<button class="sim-action-btn danger sim-delete-btn" data-sim-id="${sim.id}">[ DELETE ]</button>` : ''}
+          ${isFavorites 
+            ? `<button class="sim-action-btn danger fav-remove-btn" data-sim-id="${sim.id}">[ REMOVE ]</button>` 
+            : `<button class="sim-action-btn danger sim-delete-btn" data-sim-id="${sim.id}">[ DELETE ]</button>`}
         </div>
       </div>
     `).join('');
@@ -137,6 +139,15 @@ const Dashboard = {
         e.stopPropagation();
         const simId = btn.dataset.simId;
         this.deleteSimulation(simId);
+      });
+    });
+
+    container.querySelectorAll('.fav-remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const simId = btn.dataset.simId;
+        this.removeFavorite(simId);
       });
     });
   },
@@ -162,6 +173,26 @@ const Dashboard = {
     } catch (err) {
       console.error('Delete failed:', err);
       alert('Error deleting simulation');
+    }
+  },
+
+  async removeFavorite(simulationId) {
+    if (!confirm('Remove this simulation from favorites?')) return;
+    
+    try {
+      const res = await fetch(`/api/simulations/${simulationId}/favorite`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      
+      if (res.ok) {
+        await this.loadFavorites();
+      } else {
+        alert('Failed to remove favorite');
+      }
+    } catch (err) {
+      console.error('Remove favorite failed:', err);
+      alert('Error removing favorite');
     }
   },
   
