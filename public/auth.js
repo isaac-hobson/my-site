@@ -72,27 +72,30 @@ const AuthManager = {
     const emailGroup = document.getElementById('email-group');
     const displaynameGroup = document.getElementById('displayname-group');
     const switchText = document.getElementById('modal-switch');
-    const switchLink = document.getElementById('switch-link');
+    
+    if (!modal) return;
     
     this.mode = mode;
     
     if (mode === 'login') {
-      title.textContent = '> LOGIN';
-      submitBtn.textContent = '[ AUTHENTICATE ]';
-      emailGroup.classList.add('hidden');
-      displaynameGroup.classList.add('hidden');
-      switchText.innerHTML = "Don't have an account? <a href='#' id='switch-link'>Register</a>";
+      if (title) title.textContent = '> LOGIN';
+      if (submitBtn) submitBtn.textContent = '[ AUTHENTICATE ]';
+      if (emailGroup) emailGroup.classList.add('hidden');
+      if (displaynameGroup) displaynameGroup.classList.add('hidden');
+      if (switchText) switchText.innerHTML = "Don't have an account? <a href='#' id='switch-link'>Register</a>";
     } else {
-      title.textContent = '> REGISTER';
-      submitBtn.textContent = '[ CREATE ACCOUNT ]';
-      emailGroup.classList.remove('hidden');
-      displaynameGroup.classList.remove('hidden');
-      switchText.innerHTML = "Already have an account? <a href='#' id='switch-link'>Login</a>";
+      if (title) title.textContent = '> REGISTER';
+      if (submitBtn) submitBtn.textContent = '[ CREATE ACCOUNT ]';
+      if (emailGroup) emailGroup.classList.remove('hidden');
+      if (displaynameGroup) displaynameGroup.classList.remove('hidden');
+      if (switchText) switchText.innerHTML = "Already have an account? <a href='#' id='switch-link'>Login</a>";
     }
     
-    document.getElementById('switch-link').addEventListener('click', (e) => this.switchMode(e));
+    const switchLink = document.getElementById('switch-link');
+    if (switchLink) switchLink.addEventListener('click', (e) => this.switchMode(e));
     modal.classList.remove('hidden');
-    document.getElementById('username').focus();
+    const usernameField = document.getElementById('username');
+    if (usernameField) usernameField.focus();
   },
   
   hideModal() {
@@ -100,9 +103,9 @@ const AuthManager = {
     const form = document.getElementById('auth-form');
     const error = document.getElementById('form-error');
     
-    modal.classList.add('hidden');
-    form.reset();
-    error.classList.add('hidden');
+    if (modal) modal.classList.add('hidden');
+    if (form) form.reset();
+    if (error) error.classList.add('hidden');
   },
   
   switchMode(e) {
