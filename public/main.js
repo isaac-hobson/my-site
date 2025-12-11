@@ -118,23 +118,51 @@ async function loadCategories() {
       categories[sim.category].push(sim);
     });
 
-    // Build accordion HTML
-    container.innerHTML = Object.entries(categories).map(([category, sims]) => `
-      <div class="category-accordion">
-        <button class="category-header" type="button">
-          <span>>> ${category}</span>
-          <span class="category-toggle">[+]</span>
-        </button>
-        <div class="category-sims">
-          ${sims.map(sim => `
-            <a href="shapes.html?sim=${sim.id}" class="sim-link">
-              <span class="sim-link-name">${sim.name}</span>
-              <span class="sim-link-desc">${sim.description}</span>
-            </a>
-          `).join('')}
-        </div>
-      </div>
-    `).join('');
+    // Build accordion using safe DOM methods (prevents XSS)
+    container.innerHTML = '';
+    Object.entries(categories).forEach(([category, sims]) => {
+      const accordion = document.createElement('div');
+      accordion.className = 'category-accordion';
+
+      const header = document.createElement('button');
+      header.className = 'category-header';
+      header.type = 'button';
+
+      const categorySpan = document.createElement('span');
+      categorySpan.textContent = `>> ${category}`;
+      header.appendChild(categorySpan);
+
+      const toggle = document.createElement('span');
+      toggle.className = 'category-toggle';
+      toggle.textContent = '[+]';
+      header.appendChild(toggle);
+
+      accordion.appendChild(header);
+
+      const simsContainer = document.createElement('div');
+      simsContainer.className = 'category-sims';
+
+      sims.forEach(sim => {
+        const link = document.createElement('a');
+        link.href = `shapes.html?sim=${encodeURIComponent(sim.id)}`;
+        link.className = 'sim-link';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'sim-link-name';
+        nameSpan.textContent = sim.name;
+        link.appendChild(nameSpan);
+
+        const descSpan = document.createElement('span');
+        descSpan.className = 'sim-link-desc';
+        descSpan.textContent = sim.description;
+        link.appendChild(descSpan);
+
+        simsContainer.appendChild(link);
+      });
+
+      accordion.appendChild(simsContainer);
+      container.appendChild(accordion);
+    });
 
     // Add accordion behavior
     container.querySelectorAll('.category-header').forEach(header => {
