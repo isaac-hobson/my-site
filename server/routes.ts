@@ -120,6 +120,29 @@ export function setupRoutes(app: Express) {
     }
   });
 
+  // User's saved presets
+  app.get("/api/user/presets", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const presets = await storage.getPresetsByUser(req.user!.id);
+      res.json(presets);
+    } catch (err) {
+      console.error("Error fetching user presets:", err);
+      res.status(500).json({ error: "Failed to fetch presets" });
+    }
+  });
+
+  // Public presets from all users
+  app.get("/api/presets/public", async (req: Request, res: Response) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      const presets = await storage.getPublicPresets(limit);
+      res.json(presets);
+    } catch (err) {
+      console.error("Error fetching public presets:", err);
+      res.status(500).json({ error: "Failed to fetch public presets" });
+    }
+  });
+
   app.post("/api/simulations/:id/presets", requireAuth, async (req: Request, res: Response) => {
     try {
       const simulationId = parseInt(req.params.id);

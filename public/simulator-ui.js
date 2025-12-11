@@ -19,6 +19,7 @@ const SimulatorUI = {
     this.setupKeyboardShortcuts();
     this.parseUrlParams();
     this.startFpsCounter();
+    this.loadUserPresets();
     
     // Initialize first section as expanded
     const sections = document.querySelectorAll('.section-content');
@@ -298,6 +299,7 @@ const SimulatorUI = {
       });
       
       this.hideSaveModal();
+      this.loadUserPresets();
       alert('Preset saved successfully!');
     } catch (err) {
       document.getElementById('save-error').textContent = err.message;
@@ -350,6 +352,99 @@ const SimulatorUI = {
       requestAnimationFrame(update);
     };
     update();
+  },
+
+  async loadUserPresets() {
+    const presetsList = document.getElementById('presets-list');
+    if (!presetsList) return;
+
+    if (!this.user) {
+      presetsList.innerHTML = '<p class="no-presets">Login to see your saved presets</p>';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/user/presets', { credentials: 'include' });
+      if (!res.ok) throw new Error('Failed to load presets');
+      
+      const presets = await res.json();
+      
+      if (presets.length === 0) {
+        presetsList.innerHTML = '<p class="no-presets">No saved presets yet</p>';
+        return;
+      }
+
+      presetsList.innerHTML = presets.map(preset => `
+        <div class="preset-item" data-preset-id="${preset.id}">
+          <div class="preset-info">
+            <span class="preset-name">${preset.name}</span>
+            <span class="preset-sim">${this.simulationNames[preset.simulationType] || 'Unknown'}</span>
+          </div>
+          <div class="preset-actions">
+            <button class="preset-apply-btn" data-preset='${JSON.stringify(preset)}'>APPLY</button>
+            <button class="preset-delete-btn" data-id="${preset.id}">X</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Add event listeners for apply and delete
+      presetsList.querySelectorAll('.preset-apply-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const preset = JSON.parse(btn.dataset.preset);
+          this.applyPreset(preset);
+        });
+      });
+
+      presetsList.querySelectorAll('.preset-delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          await this.deletePreset(id);
+        });
+      });
+
+    } catch (err) {
+      console.error('Error loading presets:', err);
+      presetsList.innerHTML = '<p class="no-presets">Failed to load presets</p>';
+    }
+  },
+
+  applyPreset(preset) {
+    // Switch to the simulation type
+    if (preset.simulationType !== undefined) {
+      this.selectSimulation(preset.simulationType);
+    }
+
+    // Apply slider values
+    const sliders = ['hue', 'decay', 'speed', 'zoom', 'spokes', 'winding'];
+    sliders.forEach(id => {
+      const input = document.getElementById(id);
+      const val = document.getElementById(`${id}-val`);
+      if (input && preset[id] !== undefined) {
+        input.value = preset[id];
+        if (val) val.textContent = preset[id];
+      }
+    });
+  },
+
+  async deletePreset(id) {
+    if (!confirm('Delete this preset?')) return;
+
+    try {
+      const res = await fetch(`/api/presets/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (!res.ok) throw new Error('Failed to delete preset');
+      
+      // Reload presets
+      this.loadUserPresets();
+    } catch (err) {
+      console.error('Error deleting preset:', err);
+      alert('Failed to delete preset');
+    }
   }
 };
 

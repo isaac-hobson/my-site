@@ -94,6 +94,57 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(presets).where(eq(presets.simulationId, simulationId)).orderBy(desc(presets.createdAt));
   }
 
+  async getPresetsByUser(userId: number): Promise<(Preset & { simulationType: number; simulationName: string })[]> {
+    const results = await db
+      .select({
+        id: presets.id,
+        simulationId: presets.simulationId,
+        name: presets.name,
+        hue: presets.hue,
+        decay: presets.decay,
+        speed: presets.speed,
+        zoom: presets.zoom,
+        spokes: presets.spokes,
+        winding: presets.winding,
+        customParams: presets.customParams,
+        createdAt: presets.createdAt,
+        simulationType: simulations.simulationType,
+        simulationName: simulations.name,
+      })
+      .from(presets)
+      .innerJoin(simulations, eq(presets.simulationId, simulations.id))
+      .where(eq(simulations.userId, userId))
+      .orderBy(desc(presets.createdAt));
+    return results;
+  }
+
+  async getPublicPresets(limit = 50): Promise<(Preset & { simulationType: number; simulationName: string; ownerName: string })[]> {
+    const results = await db
+      .select({
+        id: presets.id,
+        simulationId: presets.simulationId,
+        name: presets.name,
+        hue: presets.hue,
+        decay: presets.decay,
+        speed: presets.speed,
+        zoom: presets.zoom,
+        spokes: presets.spokes,
+        winding: presets.winding,
+        customParams: presets.customParams,
+        createdAt: presets.createdAt,
+        simulationType: simulations.simulationType,
+        simulationName: simulations.name,
+        ownerName: users.displayName,
+      })
+      .from(presets)
+      .innerJoin(simulations, eq(presets.simulationId, simulations.id))
+      .innerJoin(users, eq(simulations.userId, users.id))
+      .where(eq(simulations.isPublic, true))
+      .orderBy(desc(presets.createdAt))
+      .limit(limit);
+    return results.map(r => ({ ...r, ownerName: r.ownerName || 'Anonymous' }));
+  }
+
   async createPreset(preset: InsertPreset): Promise<Preset> {
     const [p] = await db.insert(presets).values(preset).returning();
     return p;

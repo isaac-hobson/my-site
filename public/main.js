@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   createGeometricShapes();
+  loadCategories();
+  loadPublicPresets();
 });
 
 function launchSimulator() {
@@ -96,5 +98,111 @@ function createGeometricShapes() {
     `;
     document.head.appendChild(style);
     container.appendChild(shape);
+  }
+}
+
+async function loadCategories() {
+  const container = document.getElementById('categories-container');
+  if (!container) return;
+
+  try {
+    const res = await fetch('/api/simulation-types');
+    const simTypes = await res.json();
+
+    // Group simulations by category
+    const categories = {};
+    simTypes.forEach(sim => {
+      if (!categories[sim.category]) {
+        categories[sim.category] = [];
+      }
+      categories[sim.category].push(sim);
+    });
+
+    // Build accordion HTML
+    container.innerHTML = Object.entries(categories).map(([category, sims]) => `
+      <div class="category-accordion">
+        <button class="category-header" type="button">
+          <span>>> ${category}</span>
+          <span class="category-toggle">[+]</span>
+        </button>
+        <div class="category-sims">
+          ${sims.map(sim => `
+            <a href="shapes.html?sim=${sim.id}" class="sim-link">
+              <span class="sim-link-name">${sim.name}</span>
+              <span class="sim-link-desc">${sim.description}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    // Add accordion behavior
+    container.querySelectorAll('.category-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const accordion = header.closest('.category-accordion');
+        const simsContainer = accordion.querySelector('.category-sims');
+        const toggle = header.querySelector('.category-toggle');
+        const isExpanded = accordion.classList.contains('expanded');
+
+        // Close all other accordions
+        container.querySelectorAll('.category-accordion').forEach(acc => {
+          acc.classList.remove('expanded');
+          acc.querySelector('.category-toggle').textContent = '[+]';
+        });
+
+        // Toggle this one
+        if (!isExpanded) {
+          accordion.classList.add('expanded');
+          toggle.textContent = '[-]';
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error('Error loading categories:', err);
+    container.innerHTML = '<p class="error">Failed to load categories</p>';
+  }
+}
+
+async function loadPublicPresets() {
+  const section = document.getElementById('public-presets-section');
+  const grid = document.getElementById('public-presets-grid');
+  if (!section || !grid) return;
+
+  try {
+    const res = await fetch('/api/presets/public');
+    const presets = await res.json();
+
+    if (presets.length === 0) {
+      section.classList.add('hidden');
+      return;
+    }
+
+    section.classList.remove('hidden');
+
+    const simNames = [
+      'Evolving Star Fractal', 'Hyperspace Web', 'Lissajous Cascade',
+      'Magnetic Field Tracer', 'Asymmetric Orbitals', 'Reaction-Diffusion Ring',
+      'Neural Network', 'Flocking Swarm', 'Fractal Tree', 'Galaxy Spiral',
+      'Quantum Wave', 'Strange Attractor', 'Sacred Geometry', 'Electric Plasma',
+      'Infinite Zoom', 'Bioluminescence', 'DNA Helix'
+    ];
+
+    grid.innerHTML = presets.slice(0, 6).map(preset => `
+      <a href="shapes.html?sim=${preset.simulationType}&preset=${preset.id}" class="public-preset-card">
+        <div class="preset-card-header">
+          <span class="preset-card-name">${preset.name}</span>
+          <span class="preset-card-author">by ${preset.ownerName}</span>
+        </div>
+        <div class="preset-card-sim">${simNames[preset.simulationType] || 'Unknown'}</div>
+      </a>
+    `).join('');
+
+  } catch (err) {
+    console.error('Error loading public presets:', err);
+    section.classList.add('hidden');
   }
 }

@@ -32,15 +32,18 @@
       <button class="nav-btn" id="projects-btn">[ BROWSE CATEGORIES ]</button>
       <div class="dropdown-terminal" id="dropdown">
         <div class="terminal-header">> SIMULATION CATEGORIES</div>
-        <div class="terminal-content">
-          <a href="shapes.html?sim=0" class="project-link">>> Fractals & Patterns</a>
-          <a href="shapes.html?sim=4" class="project-link">>> Physics Simulations</a>
-          <a href="shapes.html?sim=6" class="project-link">>> AI & Networks</a>
-          <a href="shapes.html?sim=11" class="project-link">>> Chaos Theory</a>
-          <a href="shapes.html?sim=15" class="project-link">>> Nature & Biology</a>
+        <div class="terminal-content" id="categories-container">
+          <!-- Categories will be populated by JavaScript -->
         </div>
       </div>
     </nav>
+    
+    <section class="public-presets-section hidden" id="public-presets-section">
+      <h2 class="section-title">> COMMUNITY PRESETS</h2>
+      <div class="public-presets-grid" id="public-presets-grid">
+        <div class="loading-state">Loading public presets...</div>
+      </div>
+    </section>
     
     <section class="features-section">
       <h2 class="section-title">> PLATFORM FEATURES</h2>
