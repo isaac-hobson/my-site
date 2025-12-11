@@ -1057,6 +1057,19 @@ const simulations = [
   sim16_DNAHelix
 ];
 
+window.selectSimulation = function(index) {
+  if (index >= 0 && index < simulations.length) {
+    document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+    const targetBtn = document.querySelector(`.sim-btn[data-sim="${index}"]`);
+    if (targetBtn) targetBtn.classList.add('active');
+    currentSim = index;
+    time = 0;
+    resetSimulationState();
+    simCtx.fillStyle = 'rgba(0, 0, 0, 1)';
+    simCtx.fillRect(0, 0, simCanvas.width, simCanvas.height);
+  }
+};
+
 function animate() {
   const decayAlpha = params.decay / 100;
   simCtx.fillStyle = `rgba(0, 0, 0, ${decayAlpha})`;
