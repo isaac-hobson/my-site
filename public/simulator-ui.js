@@ -82,16 +82,23 @@ const SimulatorUI = {
     });
     
     // Section header toggles - Visual Config, Physical Modifiers, Presets
-    document.querySelectorAll('.section-header').forEach(header => {
-      header.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const sectionId = header.dataset.section;
-        const content = document.getElementById(sectionId);
-        if (content) {
-          content.classList.toggle('active');
-          header.classList.toggle('expanded', content.classList.contains('active'));
-        }
-      });
+    const sectionToggles = [
+      { btn: 'visual-config-btn', content: 'visual-config' },
+      { btn: 'physical-mods-btn', content: 'physical-mods' },
+      { btn: 'presets-btn', content: 'presets' }
+    ];
+    
+    sectionToggles.forEach(({ btn, content }) => {
+      const button = document.getElementById(btn);
+      const section = document.getElementById(content);
+      if (button && section) {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          section.classList.toggle('active');
+          button.classList.toggle('expanded', section.classList.contains('active'));
+        });
+      }
     });
     
     document.querySelectorAll('.sim-btn').forEach(btn => {
