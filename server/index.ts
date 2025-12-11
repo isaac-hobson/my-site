@@ -6,6 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { setupAuth } from "./auth.js";
 import { setupRoutes } from "./routes.js";
+import { sitePasswordMiddleware, setupSiteAuth } from "./middleware/siteAuth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,6 +37,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 setupAuth(app);
+setupSiteAuth(app);
+app.use(sitePasswordMiddleware);
 setupRoutes(app);
 
 app.use(express.static(path.join(__dirname, "..", "public"), {

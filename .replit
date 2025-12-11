@@ -39,3 +39,8 @@ deploymentTarget = "autoscale"
 publicDir = "."
 run = ["npm", "run", "start"]
 build = ["npm", "run", "build"]
+
+[userenv]
+
+[userenv.shared]
+SITE_PASSWORD = "spellz"
