@@ -116,6 +116,7 @@ Interactive solar system visualization with the following features:
 - Play/pause functionality
 - View rotation mode to observe from different angles
 - Adjustable settings: orbit speed, planet scale, orbit scale, star density, rotation speed
+- Audio upload and playback (upload any song and control with separate play/pause)
 - Mobile responsive design
 - Keyboard shortcuts: Space (play/pause), R (rotate view), M (matrix), Escape (close settings)
 
