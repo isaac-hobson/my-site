@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const projectsBtn = document.getElementById('projects-btn');
   const dropdown = document.getElementById('dropdown');
+  const launchBtn = document.getElementById('launch-btn');
   
   projectsBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -27,8 +28,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
+  launchBtn.addEventListener('click', () => {
+    launchSimulator();
+  });
+  
   createGeometricShapes();
 });
+
+function launchSimulator() {
+  const overlay = document.createElement('div');
+  overlay.className = 'launch-overlay';
+  document.body.appendChild(overlay);
+  
+  const text = document.createElement('div');
+  text.className = 'launch-text';
+  text.innerHTML = '> INITIALIZING SIMULATION<span class="blink">_</span>';
+  overlay.appendChild(text);
+  
+  setTimeout(() => {
+    overlay.classList.add('active');
+  }, 10);
+  
+  setTimeout(() => {
+    text.innerHTML = '> LOADING RENDER ENGINE<span class="blink">_</span>';
+  }, 400);
+  
+  setTimeout(() => {
+    text.innerHTML = '> ENTERING SIMULATION<span class="blink">_</span>';
+  }, 700);
+  
+  setTimeout(() => {
+    overlay.classList.add('flash');
+  }, 1000);
+  
+  setTimeout(() => {
+    window.location.href = 'shapes.html';
+  }, 1200);
+}
 
 function createGeometricShapes() {
   const container = document.getElementById('geometric-shapes');
