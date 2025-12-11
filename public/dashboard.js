@@ -181,11 +181,30 @@ const Dashboard = {
           Hue: ${preset.hue} | Speed: ${preset.speed} | Zoom: ${preset.zoom}
         </div>
         <div class="preset-actions">
-          <button class="sim-action-btn" onclick="Dashboard.viewPreset(${preset.simulationType}, ${preset.id})">[ VIEW ]</button>
-          <button class="sim-action-btn danger" onclick="Dashboard.deletePreset(${preset.id})">[ DELETE ]</button>
+          <button class="sim-action-btn preset-view-btn" data-sim-type="${preset.simulationType}" data-preset-id="${preset.id}">[ VIEW ]</button>
+          <button class="sim-action-btn danger preset-delete-btn" data-preset-id="${preset.id}">[ DELETE ]</button>
         </div>
       </div>
     `).join('');
+
+    container.querySelectorAll('.preset-view-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const simType = btn.dataset.simType;
+        const presetId = btn.dataset.presetId;
+        this.viewPreset(simType, presetId);
+      });
+    });
+
+    container.querySelectorAll('.preset-delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const presetId = btn.dataset.presetId;
+        this.deletePreset(presetId);
+      });
+    });
   },
   
   viewPreset(simType, presetId) {
