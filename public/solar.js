@@ -14,6 +14,7 @@ const SolarSystem = {
   animationId: null,
   audioPlayer: null,
   isAudioPlaying: false,
+  audioLoaded: false,
   
   settings: {
     orbitSpeed: 50,
@@ -221,13 +222,29 @@ const SolarSystem = {
         this.isAudioPlaying = false;
       }
       
+      const audioPlayBtn = document.getElementById('audio-play-btn');
+      const songNameEl = document.getElementById('song-name');
+      
       const url = URL.createObjectURL(file);
       this.audioPlayer.src = url;
       
-      const audioPlayBtn = document.getElementById('audio-play-btn');
-      audioPlayBtn.classList.remove('hidden');
-      audioPlayBtn.classList.remove('audio-btn-playing');
-      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+      this.audioPlayer.oncanplaythrough = () => {
+        audioPlayBtn.classList.remove('hidden');
+        audioPlayBtn.classList.remove('audio-btn-playing');
+        audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+        this.audioLoaded = true;
+      };
+      
+      this.audioPlayer.onerror = () => {
+        this.showStatusMessage('FILE ERROR', true);
+        this.audioLoaded = false;
+      };
+      
+      this.audioPlayer.load();
+      
+      const songName = file.name.replace(/\.[^/.]+$/, '');
+      songNameEl.textContent = '> ' + songName;
+      songNameEl.classList.remove('hidden');
       
       this.showStatusMessage('LOADED', false);
     }
@@ -236,35 +253,25 @@ const SolarSystem = {
   toggleAudio() {
     const audioPlayBtn = document.getElementById('audio-play-btn');
     
+    if (!this.audioLoaded || !this.audioPlayer.src) {
+      this.showStatusMessage('NO AUDIO', true);
+      return;
+    }
+    
     if (this.isAudioPlaying) {
       this.audioPlayer.pause();
       this.isAudioPlaying = false;
       audioPlayBtn.textContent = '[ PLAY MUSIC ]';
       audioPlayBtn.classList.remove('audio-btn-playing');
     } else {
-      const playPromise = this.audioPlayer.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          this.isAudioPlaying = true;
-          audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
-          audioPlayBtn.classList.add('audio-btn-playing');
-        }).catch((err) => {
-          console.log('Playback failed:', err.name, err.message);
-          if (err.name === 'NotAllowedError') {
-            this.audioPlayer.muted = true;
-            this.audioPlayer.play().then(() => {
-              this.audioPlayer.muted = false;
-              this.isAudioPlaying = true;
-              audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
-              audioPlayBtn.classList.add('audio-btn-playing');
-            }).catch(() => {
-              this.showStatusMessage('TAP TO PLAY', false);
-            });
-          } else {
-            this.showStatusMessage('PLAY ERROR', true);
-          }
-        });
-      }
+      this.audioPlayer.play().then(() => {
+        this.isAudioPlaying = true;
+        audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
+        audioPlayBtn.classList.add('audio-btn-playing');
+      }).catch((err) => {
+        console.log('Playback failed:', err.name, err.message);
+        this.showStatusMessage('PLAY ERROR', true);
+      });
     }
   },
   

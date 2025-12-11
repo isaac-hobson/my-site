@@ -314,3 +314,34 @@ canvas {
   height: 0;
   opacity: 0;
 }
+
+.song-name {
+  position: fixed;
+  bottom: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--primary-green);
+  color: var(--glow-green);
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  text-shadow: 0 0 5px var(--glow-green);
+  z-index: 100;
+  max-width: 80%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-name.hidden {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .song-name {
+    bottom: 4.5rem;
+    font-size: 0.8rem;
+    max-width: 90%;
+  }
+}
