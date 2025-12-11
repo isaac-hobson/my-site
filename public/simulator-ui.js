@@ -381,34 +381,52 @@ const SimulatorUI = {
         return;
       }
 
-      presetsList.innerHTML = presets.map(preset => `
-        <div class="preset-item" data-preset-id="${preset.id}">
-          <div class="preset-info">
-            <span class="preset-name">${preset.name}</span>
-            <span class="preset-sim">${this.simulationNames[preset.simulationType] || 'Unknown'}</span>
-          </div>
-          <div class="preset-actions">
-            <button class="preset-apply-btn" data-preset='${JSON.stringify(preset)}'>APPLY</button>
-            <button class="preset-delete-btn" data-id="${preset.id}">X</button>
-          </div>
-        </div>
-      `).join('');
+      presetsList.innerHTML = '';
+      
+      presets.forEach(preset => {
+        const presetItem = document.createElement('div');
+        presetItem.className = 'preset-item';
+        presetItem.dataset.presetId = String(preset.id);
 
-      // Add event listeners for apply and delete
-      presetsList.querySelectorAll('.preset-apply-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        const presetInfo = document.createElement('div');
+        presetInfo.className = 'preset-info';
+
+        const presetName = document.createElement('span');
+        presetName.className = 'preset-name';
+        presetName.textContent = preset.name;
+
+        const presetSim = document.createElement('span');
+        presetSim.className = 'preset-sim';
+        presetSim.textContent = this.simulationNames[preset.simulationType] || 'Unknown';
+
+        presetInfo.appendChild(presetName);
+        presetInfo.appendChild(presetSim);
+
+        const presetActions = document.createElement('div');
+        presetActions.className = 'preset-actions';
+
+        const applyBtn = document.createElement('button');
+        applyBtn.className = 'preset-apply-btn';
+        applyBtn.textContent = 'APPLY';
+        applyBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const preset = JSON.parse(btn.dataset.preset);
           this.applyPreset(preset);
         });
-      });
 
-      presetsList.querySelectorAll('.preset-delete-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'preset-delete-btn';
+        deleteBtn.textContent = 'X';
+        deleteBtn.addEventListener('click', async (e) => {
           e.stopPropagation();
-          const id = btn.dataset.id;
-          await this.deletePreset(id);
+          await this.deletePreset(preset.id);
         });
+
+        presetActions.appendChild(applyBtn);
+        presetActions.appendChild(deleteBtn);
+
+        presetItem.appendChild(presetInfo);
+        presetItem.appendChild(presetActions);
+        presetsList.appendChild(presetItem);
       });
 
     } catch (err) {
