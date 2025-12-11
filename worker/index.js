@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
     
     // Your Replit published URL - update this after publishing
-    const REPLIT_URL = env.REPLIT_URL || 'https://your-app-name.replit.app';
+    const REPLIT_URL = env.REPLIT_URL || 'https://my-site--isaachobson420.replit.app';
     
     const targetUrl = REPLIT_URL + url.pathname + url.search;
     
