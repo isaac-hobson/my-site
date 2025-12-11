@@ -24,15 +24,18 @@ A professional-grade full-stack mathematical simulation platform with retro-term
 ├── public/              # Frontend static files
 │   ├── index.html       # Homepage with auth UI
 │   ├── shapes.html      # Simulator page
+│   ├── solar.html       # Solar system simulation page
 │   ├── dashboard.html   # User dashboard
 │   ├── styles.css       # Main styles
 │   ├── shapes.css       # Simulator styles
+│   ├── solar.css        # Solar system styles
 │   ├── dashboard.css    # Dashboard styles
 │   ├── matrix.js        # Matrix rain animation
 │   ├── main.js          # Homepage interactions
 │   ├── auth.js          # Authentication UI
 │   ├── simulations.js   # 17 simulation implementations
 │   ├── simulator-ui.js  # Simulator controls/export
+│   ├── solar.js         # Solar system simulation
 │   └── dashboard.js     # Dashboard functionality
 ├── package.json         # Dependencies
 ├── tsconfig.json        # TypeScript config
@@ -102,6 +105,19 @@ A professional-grade full-stack mathematical simulation platform with retro-term
 - `F` - Toggle fullscreen
 - `M` - Toggle modify panel
 - `Space` - Pause/resume animation
+
+## Solar System Simulation
+Interactive solar system visualization with the following features:
+- 8 planets with realistic colors and proportional orbits (Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune)
+- Saturn features rings
+- Twinkling star background
+- Red matrix rain overlay (toggle with MATRIX button)
+- "ACTIVATED"/"DEACTIVATED" status messages when toggling matrix
+- Play/pause functionality
+- View rotation mode to observe from different angles
+- Adjustable settings: orbit speed, planet scale, orbit scale, star density, rotation speed
+- Mobile responsive design
+- Keyboard shortcuts: Space (play/pause), R (rotate view), M (matrix), Escape (close settings)
 
 ## Design Philosophy
 "High-Contrast Retro-Terminal Performance"
