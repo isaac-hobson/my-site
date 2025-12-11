@@ -116,14 +116,32 @@ const Dashboard = {
           <span>${this.formatDate(sim.createdAt)}</span>
         </div>
         <div class="sim-card-actions">
-          <button class="sim-action-btn" onclick="Dashboard.openSimulation(${sim.id}, ${sim.simulationType})">[ VIEW ]</button>
-          ${!isFavorites ? `<button class="sim-action-btn danger" onclick="Dashboard.deleteSimulation(${sim.id})">[ DELETE ]</button>` : ''}
+          <button class="sim-action-btn sim-view-btn" data-sim-type="${sim.simulationType}">[ VIEW ]</button>
+          ${!isFavorites ? `<button class="sim-action-btn danger sim-delete-btn" data-sim-id="${sim.id}">[ DELETE ]</button>` : ''}
         </div>
       </div>
     `).join('');
+
+    container.querySelectorAll('.sim-view-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const simType = btn.dataset.simType;
+        this.openSimulation(simType);
+      });
+    });
+
+    container.querySelectorAll('.sim-delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const simId = btn.dataset.simId;
+        this.deleteSimulation(simId);
+      });
+    });
   },
   
-  openSimulation(id, type) {
+  openSimulation(type) {
     window.location.href = `/shapes.html?sim=${type}`;
   },
   
