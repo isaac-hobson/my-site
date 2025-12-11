@@ -1,40 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
   const quote = "the truth finds those who seek";
   const quoteElement = document.getElementById('quote');
-  let charIndex = 0;
   
-  function typeQuote() {
-    if (charIndex < quote.length) {
-      quoteElement.textContent = quote.substring(0, charIndex + 1);
-      charIndex++;
-      setTimeout(typeQuote, 80);
+  if (quoteElement) {
+    let charIndex = 0;
+    
+    function typeQuote() {
+      if (charIndex < quote.length) {
+        quoteElement.textContent = quote.substring(0, charIndex + 1);
+        charIndex++;
+        setTimeout(typeQuote, 80);
+      }
     }
+    
+    setTimeout(typeQuote, 1000);
   }
-  
-  setTimeout(typeQuote, 1000);
   
   const projectsBtn = document.getElementById('projects-btn');
   const dropdown = document.getElementById('dropdown');
   const launchBtn = document.getElementById('launch-btn');
   
-  projectsBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle('active');
-  });
+  if (projectsBtn && dropdown) {
+    projectsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('active');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
+        dropdown.classList.remove('active');
+      }
+    });
+  }
   
-  document.addEventListener('click', (e) => {
-    if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
-      dropdown.classList.remove('active');
-    }
-  });
+  if (launchBtn) {
+    launchBtn.addEventListener('click', () => {
+      launchSimulator();
+    });
+  }
   
-  launchBtn.addEventListener('click', () => {
-    launchSimulator();
-  });
+  if (document.getElementById('geometric-shapes')) {
+    createGeometricShapes();
+  }
   
-  createGeometricShapes();
-  loadCategories();
-  loadPublicPresets();
+  if (document.getElementById('categories-container')) {
+    loadCategories();
+  }
+  
+  if (document.getElementById('public-presets-grid')) {
+    loadPublicPresets();
+  }
 });
 
 function launchSimulator() {
