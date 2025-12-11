@@ -8,7 +8,8 @@ export function sitePasswordMiddleware(req: Request, res: Response, next: NextFu
   }
 
   const staticExtensions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot'];
-  const isStaticFile = staticExtensions.some(ext => req.path.endsWith(ext));
+  const pathWithoutQuery = req.path.split('?')[0];
+  const isStaticFile = staticExtensions.some(ext => pathWithoutQuery.endsWith(ext));
   
   if (isStaticFile) {
     return next();
