@@ -221,17 +221,17 @@ const Dashboard = {
     }
     
     container.innerHTML = presets.map(preset => `
-      <div class="preset-card" data-id="${preset.id}">
+      <div class="preset-card" data-id="${this.escapeAttr(preset.id)}">
         <div class="preset-info">
           <span class="preset-name">${this.escapeHtml(preset.name)}</span>
           <span class="preset-sim">${this.simulationTypes[preset.simulationType] || 'Unknown'}</span>
         </div>
         <div class="preset-params">
-          Hue: ${preset.hue} | Speed: ${preset.speed} | Zoom: ${preset.zoom}
+          Hue: ${this.escapeAttr(preset.hue)} | Speed: ${this.escapeAttr(preset.speed)} | Zoom: ${this.escapeAttr(preset.zoom)}
         </div>
         <div class="preset-actions">
-          <button class="sim-action-btn preset-view-btn" data-sim-type="${preset.simulationType}" data-preset-id="${preset.id}">[ VIEW ]</button>
-          <button class="sim-action-btn danger preset-delete-btn" data-preset-id="${preset.id}">[ DELETE ]</button>
+          <button class="sim-action-btn preset-view-btn" data-sim-type="${this.escapeAttr(preset.simulationType)}" data-preset-id="${this.escapeAttr(preset.id)}">[ VIEW ]</button>
+          <button class="sim-action-btn danger preset-delete-btn" data-preset-id="${this.escapeAttr(preset.id)}">[ DELETE ]</button>
         </div>
       </div>
     `).join('');
