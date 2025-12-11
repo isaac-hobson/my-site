@@ -99,6 +99,18 @@ canvas {
   box-shadow: 0 0 15px var(--red-matrix);
 }
 
+.audio-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.audio-btn-playing {
+  border-color: #00AAFF;
+  color: #00AAFF;
+  text-shadow: 0 0 5px #00CCFF;
+  box-shadow: 0 0 15px #00AAFF;
+}
+
 .home-btn {
   background: rgba(0, 51, 0, 0.9);
 }

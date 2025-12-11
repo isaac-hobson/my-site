@@ -12,6 +12,8 @@ const SolarSystem = {
   viewAngle: 0,
   time: 0,
   animationId: null,
+  audioPlayer: null,
+  isAudioPlaying: false,
   
   settings: {
     orbitSpeed: 50,
@@ -120,6 +122,11 @@ const SolarSystem = {
     const settingsPanel = document.getElementById('settings-panel');
     const closeSettings = document.getElementById('close-settings');
     const resetSettings = document.getElementById('reset-settings');
+    const uploadAudioBtn = document.getElementById('upload-audio-btn');
+    const audioUpload = document.getElementById('audio-upload');
+    const audioPlayBtn = document.getElementById('audio-play-btn');
+    
+    this.audioPlayer = document.getElementById('audio-player');
     
     playPauseBtn.addEventListener('click', () => this.togglePlayPause());
     rotateViewBtn.addEventListener('click', () => this.toggleViewRotation());
@@ -127,6 +134,16 @@ const SolarSystem = {
     settingsBtn.addEventListener('click', () => settingsPanel.classList.toggle('hidden'));
     closeSettings.addEventListener('click', () => settingsPanel.classList.add('hidden'));
     resetSettings.addEventListener('click', () => this.resetSettings());
+    
+    uploadAudioBtn.addEventListener('click', () => audioUpload.click());
+    audioUpload.addEventListener('change', (e) => this.handleAudioUpload(e));
+    audioPlayBtn.addEventListener('click', () => this.toggleAudio());
+    
+    this.audioPlayer.addEventListener('ended', () => {
+      this.isAudioPlaying = false;
+      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+      audioPlayBtn.classList.remove('audio-btn-playing');
+    });
     
     const sliders = ['orbit-speed', 'planet-scale', 'orbit-scale', 'star-density', 'rotation-speed'];
     sliders.forEach(id => {
@@ -194,6 +211,46 @@ const SolarSystem = {
     setTimeout(() => {
       msgEl.classList.remove('show');
     }, 1500);
+  },
+  
+  handleAudioUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+      if (this.isAudioPlaying) {
+        this.audioPlayer.pause();
+        this.isAudioPlaying = false;
+      }
+      
+      const url = URL.createObjectURL(file);
+      this.audioPlayer.src = url;
+      
+      const audioPlayBtn = document.getElementById('audio-play-btn');
+      audioPlayBtn.classList.remove('hidden');
+      audioPlayBtn.classList.remove('audio-btn-playing');
+      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+      
+      this.showStatusMessage('LOADED', false);
+    }
+  },
+  
+  toggleAudio() {
+    const audioPlayBtn = document.getElementById('audio-play-btn');
+    
+    if (this.isAudioPlaying) {
+      this.audioPlayer.pause();
+      this.isAudioPlaying = false;
+      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+      audioPlayBtn.classList.remove('audio-btn-playing');
+    } else {
+      this.audioPlayer.play().then(() => {
+        this.isAudioPlaying = true;
+        audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
+        audioPlayBtn.classList.add('audio-btn-playing');
+      }).catch((err) => {
+        console.log('Playback failed:', err);
+        this.showStatusMessage('PLAY ERROR', true);
+      });
+    }
   },
   
   resetSettings() {
@@ -293,7 +350,7 @@ const SolarSystem = {
     this.solarCtx.translate(centerX, centerY);
     
     if (this.isRotatingView && !this.isPaused) {
-      this.viewAngle += (this.settings.rotationSpeed / 1000);
+      this.viewAngle += this.settings.rotationSpeed * 0.0005;
     }
     
     const tiltAngle = 0.3;
