@@ -137,10 +137,30 @@
   text-shadow: 0 0 5px var(--glow-green);
   transition: all 0.2s ease;
   user-select: none;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header::after {
+  content: '[+]';
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.section-header.expanded::after {
+  content: '[-]';
 }
 
 .section-header:hover {
   background: var(--dark-green);
+}
+
+.section-header:active {
+  background: var(--primary-green);
+  color: var(--background);
 }
 
 .section-content {

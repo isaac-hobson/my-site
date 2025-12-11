@@ -20,8 +20,13 @@ const SimulatorUI = {
     this.parseUrlParams();
     this.startFpsCounter();
     
+    // Initialize first section as expanded
     const sections = document.querySelectorAll('.section-content');
-    if (sections.length > 0) sections[0].classList.add('active');
+    const headers = document.querySelectorAll('.section-header');
+    if (sections.length > 0) {
+      sections[0].classList.add('active');
+      if (headers.length > 0) headers[0].classList.add('expanded');
+    }
   },
   
   async checkAuth() {
@@ -54,21 +59,38 @@ const SimulatorUI = {
     const controlPanel = document.getElementById('control-panel');
     const closePanel = document.getElementById('close-panel');
     
-    controlToggle?.addEventListener('click', () => {
+    controlToggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
       controlPanel.classList.add('active');
       controlToggle.classList.add('hidden');
     });
     
-    closePanel?.addEventListener('click', () => {
+    closePanel?.addEventListener('click', (e) => {
+      e.stopPropagation();
       controlPanel.classList.remove('active');
       controlToggle.classList.remove('hidden');
     });
     
+    // Click outside to close the control panel
+    document.addEventListener('click', (e) => {
+      if (controlPanel.classList.contains('active')) {
+        if (!controlPanel.contains(e.target) && e.target !== controlToggle) {
+          controlPanel.classList.remove('active');
+          controlToggle.classList.remove('hidden');
+        }
+      }
+    });
+    
+    // Section header toggles - Visual Config, Physical Modifiers, Presets
     document.querySelectorAll('.section-header').forEach(header => {
-      header.addEventListener('click', () => {
+      header.addEventListener('click', (e) => {
+        e.stopPropagation();
         const sectionId = header.dataset.section;
         const content = document.getElementById(sectionId);
-        content?.classList.toggle('active');
+        if (content) {
+          content.classList.toggle('active');
+          header.classList.toggle('expanded', content.classList.contains('active'));
+        }
       });
     });
     
