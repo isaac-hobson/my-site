@@ -128,8 +128,6 @@ const SolarSystem = {
     const audioUpload = document.getElementById('audio-upload');
     const audioPlayBtn = document.getElementById('audio-play-btn');
     
-    this.audioPlayer = document.getElementById('audio-player');
-    
     playPauseBtn.addEventListener('click', () => this.togglePlayPause());
     rotateViewBtn.addEventListener('click', () => this.toggleViewRotation());
     matrixBtn.addEventListener('click', () => this.toggleMatrix());
@@ -140,12 +138,6 @@ const SolarSystem = {
     uploadAudioBtn.addEventListener('click', () => audioUpload.click());
     audioUpload.addEventListener('change', (e) => this.handleAudioUpload(e));
     audioPlayBtn.addEventListener('click', () => this.toggleAudio());
-    
-    this.audioPlayer.addEventListener('ended', () => {
-      this.isAudioPlaying = false;
-      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
-      audioPlayBtn.classList.remove('audio-btn-playing');
-    });
     
     const sliders = ['orbit-speed', 'planet-scale', 'orbit-scale', 'star-density', 'rotation-speed'];
     sliders.forEach(id => {
@@ -219,43 +211,55 @@ const SolarSystem = {
     const file = e.target.files[0];
     if (!file) return;
     
-    if (this.isAudioPlaying) {
+    const audioPlayBtn = document.getElementById('audio-play-btn');
+    const songNameEl = document.getElementById('song-name');
+    
+    if (this.isAudioPlaying && this.audioPlayer) {
       this.audioPlayer.pause();
       this.isAudioPlaying = false;
     }
     
-    if (this.currentAudioURL) {
-      URL.revokeObjectURL(this.currentAudioURL);
-    }
-    
-    const audioPlayBtn = document.getElementById('audio-play-btn');
-    const songNameEl = document.getElementById('song-name');
-    
     this.audioLoaded = false;
-    this.currentAudioURL = URL.createObjectURL(file);
+    this.showStatusMessage('LOADING...', false);
     
-    this.audioPlayer.oncanplaythrough = () => {
-      this.audioLoaded = true;
-      audioPlayBtn.classList.remove('hidden');
-      audioPlayBtn.classList.remove('audio-btn-playing');
-      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
-      this.showStatusMessage('READY', false);
+    const reader = new FileReader();
+    
+    reader.onload = (event) => {
+      this.audioPlayer = new Audio();
+      this.audioPlayer.preload = 'auto';
+      
+      this.audioPlayer.oncanplaythrough = () => {
+        this.audioLoaded = true;
+        audioPlayBtn.classList.remove('hidden');
+        audioPlayBtn.classList.remove('audio-btn-playing');
+        audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+        this.showStatusMessage('READY', false);
+      };
+      
+      this.audioPlayer.onended = () => {
+        this.isAudioPlaying = false;
+        audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+        audioPlayBtn.classList.remove('audio-btn-playing');
+      };
+      
+      this.audioPlayer.onerror = () => {
+        console.log('Audio error:', this.audioPlayer.error);
+        this.showStatusMessage('FORMAT ERROR', true);
+        this.audioLoaded = false;
+      };
+      
+      this.audioPlayer.src = event.target.result;
     };
     
-    this.audioPlayer.onerror = (err) => {
-      console.log('Audio load error:', err);
-      this.showStatusMessage('LOAD ERROR', true);
-      this.audioLoaded = false;
+    reader.onerror = () => {
+      this.showStatusMessage('READ ERROR', true);
     };
     
-    this.audioPlayer.src = this.currentAudioURL;
-    this.audioPlayer.load();
+    reader.readAsDataURL(file);
     
     const songName = file.name.replace(/\.[^/.]+$/, '');
     songNameEl.textContent = '> NOW: ' + songName;
     songNameEl.classList.remove('hidden');
-    
-    this.showStatusMessage('LOADING...', false);
   },
   
   toggleAudio() {
