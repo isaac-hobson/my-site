@@ -51,8 +51,10 @@ canvas {
 .controls-container {
   position: fixed;
   bottom: 1.5rem;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 95vw;
   display: flex;
   gap: 0.5rem;
   z-index: 100;
@@ -97,12 +99,6 @@ canvas {
   color: var(--red-matrix);
   text-shadow: 0 0 5px var(--glow-red);
   box-shadow: 0 0 15px var(--red-matrix);
-}
-
-.audio-controls {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
 }
 
 .audio-btn-playing {
@@ -308,8 +304,13 @@ canvas {
     font-size: 0.75rem;
     padding: 0.4rem 0.5rem;
   }
-  
-  #rotate-view-btn {
-    display: none;
-  }
+}
+
+#audio-upload {
+  display: none !important;
+  position: absolute;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
