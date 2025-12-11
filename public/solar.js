@@ -231,19 +231,31 @@ const SolarSystem = {
     const audioPlayBtn = document.getElementById('audio-play-btn');
     const songNameEl = document.getElementById('song-name');
     
+    this.audioLoaded = false;
     this.currentAudioURL = URL.createObjectURL(file);
-    this.audioPlayer.src = this.currentAudioURL;
-    this.audioLoaded = true;
     
-    audioPlayBtn.classList.remove('hidden');
-    audioPlayBtn.classList.remove('audio-btn-playing');
-    audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+    this.audioPlayer.oncanplaythrough = () => {
+      this.audioLoaded = true;
+      audioPlayBtn.classList.remove('hidden');
+      audioPlayBtn.classList.remove('audio-btn-playing');
+      audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+      this.showStatusMessage('READY', false);
+    };
+    
+    this.audioPlayer.onerror = (err) => {
+      console.log('Audio load error:', err);
+      this.showStatusMessage('LOAD ERROR', true);
+      this.audioLoaded = false;
+    };
+    
+    this.audioPlayer.src = this.currentAudioURL;
+    this.audioPlayer.load();
     
     const songName = file.name.replace(/\.[^/.]+$/, '');
     songNameEl.textContent = '> NOW: ' + songName;
     songNameEl.classList.remove('hidden');
     
-    this.showStatusMessage('LOADED', false);
+    this.showStatusMessage('LOADING...', false);
   },
   
   toggleAudio() {
