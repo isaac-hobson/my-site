@@ -242,14 +242,29 @@ const SolarSystem = {
       audioPlayBtn.textContent = '[ PLAY MUSIC ]';
       audioPlayBtn.classList.remove('audio-btn-playing');
     } else {
-      this.audioPlayer.play().then(() => {
-        this.isAudioPlaying = true;
-        audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
-        audioPlayBtn.classList.add('audio-btn-playing');
-      }).catch((err) => {
-        console.log('Playback failed:', err);
-        this.showStatusMessage('PLAY ERROR', true);
-      });
+      const playPromise = this.audioPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          this.isAudioPlaying = true;
+          audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
+          audioPlayBtn.classList.add('audio-btn-playing');
+        }).catch((err) => {
+          console.log('Playback failed:', err.name, err.message);
+          if (err.name === 'NotAllowedError') {
+            this.audioPlayer.muted = true;
+            this.audioPlayer.play().then(() => {
+              this.audioPlayer.muted = false;
+              this.isAudioPlaying = true;
+              audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
+              audioPlayBtn.classList.add('audio-btn-playing');
+            }).catch(() => {
+              this.showStatusMessage('TAP TO PLAY', false);
+            });
+          } else {
+            this.showStatusMessage('PLAY ERROR', true);
+          }
+        });
+      }
     }
   },
   
