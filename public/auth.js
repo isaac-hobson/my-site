@@ -27,13 +27,22 @@ const AuthManager = {
     const authForm = document.getElementById('auth-form');
     const switchLink = document.getElementById('switch-link');
     
-    if (loginBtn) loginBtn.addEventListener('click', () => this.showModal('login'));
-    if (registerBtn) registerBtn.addEventListener('click', () => this.showModal('register'));
-    if (logoutBtn) logoutBtn.addEventListener('click', () => this.logout());
-    if (dashboardBtn) dashboardBtn.addEventListener('click', () => window.location.href = '/dashboard.html');
-    if (modalClose) modalClose.addEventListener('click', () => this.hideModal());
+    const addTouchAndClick = (el, handler) => {
+      if (!el) return;
+      el.addEventListener('click', handler);
+      el.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        handler(e);
+      });
+    };
+    
+    addTouchAndClick(loginBtn, () => this.showModal('login'));
+    addTouchAndClick(registerBtn, () => this.showModal('register'));
+    addTouchAndClick(logoutBtn, () => this.logout());
+    addTouchAndClick(dashboardBtn, () => window.location.href = '/dashboard.html');
+    addTouchAndClick(modalClose, () => this.hideModal());
     if (authForm) authForm.addEventListener('submit', (e) => this.handleSubmit(e));
-    if (switchLink) switchLink.addEventListener('click', (e) => this.switchMode(e));
+    addTouchAndClick(switchLink, (e) => this.switchMode(e));
     
     const modal = document.getElementById('auth-modal');
     if (modal) {

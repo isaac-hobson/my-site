@@ -21,10 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const launchBtn = document.getElementById('launch-btn');
   
   if (projectsBtn && dropdown) {
-    projectsBtn.addEventListener('click', (e) => {
+    const toggleDropdown = (e) => {
+      e.preventDefault();
       e.stopPropagation();
       dropdown.classList.toggle('active');
-    });
+    };
+    projectsBtn.addEventListener('click', toggleDropdown);
+    projectsBtn.addEventListener('touchend', toggleDropdown);
     
     document.addEventListener('click', (e) => {
       if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
@@ -34,9 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   if (launchBtn) {
-    launchBtn.addEventListener('click', () => {
+    const handleLaunch = (e) => {
+      e.preventDefault();
       launchSimulator();
-    });
+    };
+    launchBtn.addEventListener('click', handleLaunch);
+    launchBtn.addEventListener('touchend', handleLaunch);
   }
   
   if (document.getElementById('geometric-shapes')) {

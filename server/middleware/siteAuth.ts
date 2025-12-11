@@ -91,8 +91,13 @@ function getLoginPage(): string {
       padding: 0.75rem 2rem;
       cursor: pointer;
       transition: all 0.3s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(0, 255, 0, 0.3);
+      user-select: none;
+      -webkit-user-select: none;
     }
-    button:hover {
+    button:hover,
+    button:active {
       background: #0f0;
       color: #000;
     }
