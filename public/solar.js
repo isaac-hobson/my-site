@@ -259,16 +259,26 @@ const SolarSystem = {
       this.isAudioPlaying = false;
       audioPlayBtn.textContent = '[ PLAY MUSIC ]';
       audioPlayBtn.classList.remove('audio-btn-playing');
+      this.showStatusMessage('PAUSED', false);
     } else {
+      this.audioPlayer.volume = 1.0;
+      this.audioPlayer.muted = false;
+      
       const playPromise = this.audioPlayer.play();
       if (playPromise) {
         playPromise.then(() => {
           this.isAudioPlaying = true;
           audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
           audioPlayBtn.classList.add('audio-btn-playing');
+          this.showStatusMessage('PLAYING', false);
         }).catch((err) => {
-          console.log('Playback error:', err);
+          console.log('Playback error:', err.name, err.message);
           this.isAudioPlaying = false;
+          if (err.name === 'NotAllowedError') {
+            this.showStatusMessage('TAP AGAIN', false);
+          } else {
+            this.showStatusMessage('OPEN IN BROWSER', true);
+          }
         });
       }
     }
