@@ -98,57 +98,87 @@ const Dashboard = {
   
   renderSimulations(container, simulations, isFavorites = false) {
     if (simulations.length === 0) {
-      container.innerHTML = `<div class="empty-state">${
-        isFavorites ? 'No favorites yet' : 'No simulations yet. Create your first one!'
-      }</div>`;
+      container.textContent = '';
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'empty-state';
+      emptyDiv.textContent = isFavorites ? 'No favorites yet' : 'No simulations yet. Create your first one!';
+      container.appendChild(emptyDiv);
       return;
     }
     
-    container.innerHTML = simulations.map(sim => `
-      <div class="simulation-card" data-id="${this.escapeAttr(sim.id)}">
-        <div class="sim-card-header">
-          <h3 class="sim-card-name">${this.escapeHtml(sim.name)}</h3>
-          ${sim.isPublic ? '<span class="sim-card-type">[PUBLIC]</span>' : ''}
-        </div>
-        <p class="sim-card-type">${this.escapeHtml(this.simulationTypes[sim.simulationType] || 'Unknown')}</p>
-        <div class="sim-card-meta">
-          <span>${this.escapeHtml(String(sim.viewCount || 0))} views</span>
-          <span>${this.escapeHtml(this.formatDate(sim.createdAt))}</span>
-        </div>
-        <div class="sim-card-actions">
-          <button class="sim-action-btn sim-view-btn" data-sim-type="${this.escapeAttr(sim.simulationType)}">[ VIEW ]</button>
-          ${isFavorites 
-            ? `<button class="sim-action-btn danger fav-remove-btn" data-sim-id="${this.escapeAttr(sim.id)}">[ REMOVE ]</button>` 
-            : `<button class="sim-action-btn danger sim-delete-btn" data-sim-id="${this.escapeAttr(sim.id)}">[ DELETE ]</button>`}
-        </div>
-      </div>
-    `).join('');
+    container.textContent = '';
+    simulations.forEach(sim => {
+      const card = document.createElement('div');
+      card.className = 'simulation-card';
+      card.dataset.id = sim.id;
 
-    container.querySelectorAll('.sim-view-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      const header = document.createElement('div');
+      header.className = 'sim-card-header';
+      const name = document.createElement('h3');
+      name.className = 'sim-card-name';
+      name.textContent = sim.name;
+      header.appendChild(name);
+      if (sim.isPublic) {
+        const publicBadge = document.createElement('span');
+        publicBadge.className = 'sim-card-type';
+        publicBadge.textContent = '[PUBLIC]';
+        header.appendChild(publicBadge);
+      }
+
+      const simType = document.createElement('p');
+      simType.className = 'sim-card-type';
+      simType.textContent = this.simulationTypes[sim.simulationType] || 'Unknown';
+
+      const meta = document.createElement('div');
+      meta.className = 'sim-card-meta';
+      const viewsSpan = document.createElement('span');
+      viewsSpan.textContent = `${sim.viewCount || 0} views`;
+      const dateSpan = document.createElement('span');
+      dateSpan.textContent = this.formatDate(sim.createdAt);
+      meta.appendChild(viewsSpan);
+      meta.appendChild(dateSpan);
+
+      const actions = document.createElement('div');
+      actions.className = 'sim-card-actions';
+      const viewBtn = document.createElement('button');
+      viewBtn.className = 'sim-action-btn sim-view-btn';
+      viewBtn.dataset.simType = sim.simulationType;
+      viewBtn.textContent = '[ VIEW ]';
+      viewBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const simType = btn.dataset.simType;
-        this.openSimulation(simType);
+        this.openSimulation(sim.simulationType);
       });
-    });
+      actions.appendChild(viewBtn);
 
-    container.querySelectorAll('.sim-delete-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const simId = btn.dataset.simId;
-        this.deleteSimulation(simId);
-      });
-    });
+      const actionBtn = document.createElement('button');
+      actionBtn.className = 'sim-action-btn danger';
+      if (isFavorites) {
+        actionBtn.classList.add('fav-remove-btn');
+        actionBtn.dataset.simId = sim.id;
+        actionBtn.textContent = '[ REMOVE ]';
+        actionBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.removeFavorite(sim.id);
+        });
+      } else {
+        actionBtn.classList.add('sim-delete-btn');
+        actionBtn.dataset.simId = sim.id;
+        actionBtn.textContent = '[ DELETE ]';
+        actionBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.deleteSimulation(sim.id);
+        });
+      }
+      actions.appendChild(actionBtn);
 
-    container.querySelectorAll('.fav-remove-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const simId = btn.dataset.simId;
-        this.removeFavorite(simId);
-      });
+      card.appendChild(header);
+      card.appendChild(simType);
+      card.appendChild(meta);
+      card.appendChild(actions);
+      container.appendChild(card);
     });
   },
   
