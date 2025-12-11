@@ -15,6 +15,7 @@ const SolarSystem = {
   audioPlayer: null,
   isAudioPlaying: false,
   audioLoaded: false,
+  currentAudioURL: null,
   
   settings: {
     orbitSpeed: 50,
@@ -216,45 +217,40 @@ const SolarSystem = {
   
   handleAudioUpload(e) {
     const file = e.target.files[0];
-    if (file) {
-      if (this.isAudioPlaying) {
-        this.audioPlayer.pause();
-        this.isAudioPlaying = false;
-      }
-      
-      const audioPlayBtn = document.getElementById('audio-play-btn');
-      const songNameEl = document.getElementById('song-name');
-      
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        this.audioPlayer.src = event.target.result;
-        this.audioLoaded = true;
-        
-        audioPlayBtn.classList.remove('hidden');
-        audioPlayBtn.classList.remove('audio-btn-playing');
-        audioPlayBtn.textContent = '[ PLAY MUSIC ]';
-        
-        const songName = file.name.replace(/\.[^/.]+$/, '');
-        songNameEl.textContent = '> NOW: ' + songName;
-        songNameEl.classList.remove('hidden');
-        
-        this.showStatusMessage('LOADED', false);
-      };
-      
-      reader.onerror = () => {
-        this.showStatusMessage('FILE ERROR', true);
-        this.audioLoaded = false;
-      };
-      
-      reader.readAsDataURL(file);
+    if (!file) return;
+    
+    if (this.isAudioPlaying) {
+      this.audioPlayer.pause();
+      this.isAudioPlaying = false;
     }
+    
+    if (this.currentAudioURL) {
+      URL.revokeObjectURL(this.currentAudioURL);
+    }
+    
+    const audioPlayBtn = document.getElementById('audio-play-btn');
+    const songNameEl = document.getElementById('song-name');
+    
+    this.currentAudioURL = URL.createObjectURL(file);
+    this.audioPlayer.src = this.currentAudioURL;
+    this.audioLoaded = true;
+    
+    audioPlayBtn.classList.remove('hidden');
+    audioPlayBtn.classList.remove('audio-btn-playing');
+    audioPlayBtn.textContent = '[ PLAY MUSIC ]';
+    
+    const songName = file.name.replace(/\.[^/.]+$/, '');
+    songNameEl.textContent = '> NOW: ' + songName;
+    songNameEl.classList.remove('hidden');
+    
+    this.showStatusMessage('LOADED', false);
   },
   
   toggleAudio() {
     const audioPlayBtn = document.getElementById('audio-play-btn');
     
-    if (!this.audioLoaded || !this.audioPlayer.src) {
-      this.showStatusMessage('NO AUDIO', true);
+    if (!this.audioLoaded) {
+      this.showStatusMessage('UPLOAD FIRST', true);
       return;
     }
     
@@ -264,14 +260,17 @@ const SolarSystem = {
       audioPlayBtn.textContent = '[ PLAY MUSIC ]';
       audioPlayBtn.classList.remove('audio-btn-playing');
     } else {
-      this.audioPlayer.play().then(() => {
-        this.isAudioPlaying = true;
-        audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
-        audioPlayBtn.classList.add('audio-btn-playing');
-      }).catch((err) => {
-        console.log('Playback failed:', err.name, err.message);
-        this.showStatusMessage('PLAY ERROR', true);
-      });
+      const playPromise = this.audioPlayer.play();
+      if (playPromise) {
+        playPromise.then(() => {
+          this.isAudioPlaying = true;
+          audioPlayBtn.textContent = '[ PAUSE MUSIC ]';
+          audioPlayBtn.classList.add('audio-btn-playing');
+        }).catch((err) => {
+          console.log('Playback error:', err);
+          this.isAudioPlaying = false;
+        });
+      }
     }
   },
   
