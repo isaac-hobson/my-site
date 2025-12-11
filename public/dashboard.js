@@ -105,21 +105,21 @@ const Dashboard = {
     }
     
     container.innerHTML = simulations.map(sim => `
-      <div class="simulation-card" data-id="${sim.id}">
+      <div class="simulation-card" data-id="${this.escapeAttr(sim.id)}">
         <div class="sim-card-header">
           <h3 class="sim-card-name">${this.escapeHtml(sim.name)}</h3>
           ${sim.isPublic ? '<span class="sim-card-type">[PUBLIC]</span>' : ''}
         </div>
-        <p class="sim-card-type">${this.simulationTypes[sim.simulationType] || 'Unknown'}</p>
+        <p class="sim-card-type">${this.escapeHtml(this.simulationTypes[sim.simulationType] || 'Unknown')}</p>
         <div class="sim-card-meta">
-          <span>${sim.viewCount || 0} views</span>
-          <span>${this.formatDate(sim.createdAt)}</span>
+          <span>${this.escapeHtml(String(sim.viewCount || 0))} views</span>
+          <span>${this.escapeHtml(this.formatDate(sim.createdAt))}</span>
         </div>
         <div class="sim-card-actions">
-          <button class="sim-action-btn sim-view-btn" data-sim-type="${sim.simulationType}">[ VIEW ]</button>
+          <button class="sim-action-btn sim-view-btn" data-sim-type="${this.escapeAttr(sim.simulationType)}">[ VIEW ]</button>
           ${isFavorites 
-            ? `<button class="sim-action-btn danger fav-remove-btn" data-sim-id="${sim.id}">[ REMOVE ]</button>` 
-            : `<button class="sim-action-btn danger sim-delete-btn" data-sim-id="${sim.id}">[ DELETE ]</button>`}
+            ? `<button class="sim-action-btn danger fav-remove-btn" data-sim-id="${this.escapeAttr(sim.id)}">[ REMOVE ]</button>` 
+            : `<button class="sim-action-btn danger sim-delete-btn" data-sim-id="${this.escapeAttr(sim.id)}">[ DELETE ]</button>`}
         </div>
       </div>
     `).join('');
@@ -296,6 +296,16 @@ const Dashboard = {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  },
+
+  escapeAttr(text) {
+    if (text == null) return '';
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   },
   
   formatDate(dateStr) {
