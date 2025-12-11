@@ -1,0 +1,6 @@
+name = "impulsive-proxy"
+main = "index.js"
+compatibility_date = "2024-12-01"
+
+[vars]
+REPLIT_URL = "https://your-app-name.replit.app"
