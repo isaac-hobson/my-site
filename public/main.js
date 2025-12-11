@@ -219,15 +219,34 @@ async function loadPublicPresets() {
       'Infinite Zoom', 'Bioluminescence', 'DNA Helix'
     ];
 
-    grid.innerHTML = presets.slice(0, 6).map(preset => `
-      <a href="shapes.html?sim=${preset.simulationType}&preset=${preset.id}" class="public-preset-card">
-        <div class="preset-card-header">
-          <span class="preset-card-name">${preset.name}</span>
-          <span class="preset-card-author">by ${preset.ownerName}</span>
-        </div>
-        <div class="preset-card-sim">${simNames[preset.simulationType] || 'Unknown'}</div>
-      </a>
-    `).join('');
+    grid.innerHTML = '';
+    presets.slice(0, 6).forEach(preset => {
+      const link = document.createElement('a');
+      link.href = `shapes.html?sim=${encodeURIComponent(preset.simulationType)}&preset=${encodeURIComponent(preset.id)}`;
+      link.className = 'public-preset-card';
+
+      const header = document.createElement('div');
+      header.className = 'preset-card-header';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'preset-card-name';
+      nameSpan.textContent = preset.name;
+
+      const authorSpan = document.createElement('span');
+      authorSpan.className = 'preset-card-author';
+      authorSpan.textContent = `by ${preset.ownerName}`;
+
+      header.appendChild(nameSpan);
+      header.appendChild(authorSpan);
+
+      const simDiv = document.createElement('div');
+      simDiv.className = 'preset-card-sim';
+      simDiv.textContent = simNames[preset.simulationType] || 'Unknown';
+
+      link.appendChild(header);
+      link.appendChild(simDiv);
+      grid.appendChild(link);
+    });
 
   } catch (err) {
     console.error('Error loading public presets:', err);
