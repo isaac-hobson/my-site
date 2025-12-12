@@ -14,7 +14,8 @@
         }
         #container {
             position: relative;
-            background-image: url('https://img.freepik.com/free-photo/surface-with-blood_1048-5193.jpg?t=st=1744393617~exp=1744397217~hmac=b4b11ba6029c84bbbf9cf5051b2a282f38727edbb2f14c5965f081bc1afba671&w=740');
+            background-image: url('https://images.unsplash.com/photo-1509281373149-e957c6296406?w=800');
+            background-color: #1a0000;
             background-size: cover;
             padding: 20px;
             border: 3px solid darkred;
@@ -192,6 +193,8 @@
             font-family: monospace;
             z-index: 1000;
             transition: background-color 0.3s, color 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         #homeButton:hover {
             background-color: darkred;
@@ -200,7 +203,7 @@
     </style>
 </head>
 <body>
-    <button id="homeButton" onclick="window.location.href='/'">HOME</button>
+    <a href="/index.html" id="homeButton">HOME</a>
     <div id="container">
         <canvas id="canvas" width="800" height="600"></canvas>
         <div id="welcomeScreen">
@@ -248,7 +251,7 @@
         const basicRoomButton = document.getElementById('basicRoomButton');
         const friendRoomButton = document.getElementById('friendRoomButton');
         const loadingScreen = document.getElementById('loading');
-        const backgroundMusic = new Audio('https://keen-dasik-165924.netlify.app/red.mp3');
+        const backgroundMusic = new Audio('./music/the-intangible.mp3');
         backgroundMusic.loop = true;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const timerDisplay = document.getElementById('timer');
