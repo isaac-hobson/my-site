@@ -14,7 +14,7 @@
         }
         #container {
             position: relative;
-            background-image: url('https://img.freepik.com/free-photo/surface-with-blood_1048-5193.jpg?w=740');
+            background-image: url('./images/blood-surface.jpg');
             background-color: #1a0000;
             background-size: cover;
             padding: 20px;
@@ -251,7 +251,7 @@
         const basicRoomButton = document.getElementById('basicRoomButton');
         const friendRoomButton = document.getElementById('friendRoomButton');
         const loadingScreen = document.getElementById('loading');
-        const backgroundMusic = new Audio('https://keen-dasik-165924.netlify.app/red.mp3');
+        const backgroundMusic = new Audio('./music/red.mp3');
         backgroundMusic.loop = true;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const timerDisplay = document.getElementById('timer');
@@ -323,7 +323,7 @@
             friendDX: 2,
             friendDY: 2,
         };
-        game.backgroundImage.src = 'https://i.postimg.cc/bJvP7ndH/door.png';
+        game.backgroundImage.src = './images/door.png';
         function drawBackground() {
             ctx.drawImage(game.backgroundImage, 0, 0, game.WIDTH, game.HEIGHT);
         }
