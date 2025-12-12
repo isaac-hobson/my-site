@@ -387,6 +387,20 @@ html, body {
   box-shadow: 0 0 15px var(--glow-green);
 }
 
+.danger-btn {
+  color: #FF0000;
+  border-color: #FF0000;
+  background: rgba(50, 0, 0, 0.8);
+  text-shadow: 0 0 10px #FF0000;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.danger-btn:hover {
+  background: #660000;
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+  text-shadow: 0 0 20px #FF0000;
+}
+
 .features-section {
   margin-top: 2rem;
   text-align: center;

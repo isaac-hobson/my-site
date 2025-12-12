@@ -25,6 +25,7 @@ A professional-grade full-stack mathematical simulation platform with retro-term
 │   ├── index.html       # Homepage with auth UI
 │   ├── shapes.html      # Simulator page
 │   ├── solar.html       # Solar system simulation page
+│   ├── redroom.html     # Red Room horror experience
 │   ├── dashboard.html   # User dashboard
 │   ├── styles.css       # Main styles
 │   ├── shapes.css       # Simulator styles
@@ -131,6 +132,18 @@ Interactive solar system visualization with the following features:
 - Volume control slider
 - Mobile responsive design
 - Keyboard shortcuts: Space (play/pause), R (rotate view), M (matrix), F (fullscreen), S (screenshot), Escape (close panels)
+
+## Red Room
+Interactive horror-themed experience with the following features:
+- Blood-splatter background with dark room aesthetic
+- Pain, Suffering, and Magic sliders to control intensity
+- Basic Room mode or "Bring a Friend" mode (upload an image)
+- Random visual effects: screen shake, red overlays, zoom distortion
+- Click/tap interaction with beep sounds and multiplier system
+- Timer tracking how long you survive
+- High scores saved to local storage
+- Background music with volume control
+- Accessed via "DO NOT ENTER" button on homepage
 
 ## Design Philosophy
 "High-Contrast Retro-Terminal Performance"

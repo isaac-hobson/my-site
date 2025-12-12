@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RED ROOM</title>
+    <style>
+        body {
+            background-color: black;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #container {
+            position: relative;
+            background-image: url('https://img.freepik.com/free-photo/surface-with-blood_1048-5193.jpg?t=st=1744393617~exp=1744397217~hmac=b4b11ba6029c84bbbf9cf5051b2a282f38727edbb2f14c5965f081bc1afba671&w=740');
+            background-size: cover;
+            padding: 20px;
+            border: 3px solid darkred;
+            border-radius: 10px;
+            width: 90vw;
+            max-width: 800px;
+            height: 90vh;
+            max-height: 600px;
+        }
+        #canvas {
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        #welcomeScreen {
+            color: red;
+            font-family: monospace;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+        }
+        #welcomeScreen button {
+            background-color: black;
+            color: red;
+            border: 2px solid red;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #welcomeScreen button:hover {
+            background-color: darkred;
+            color: white;
+        }
+        #welcomeScreen h1 {
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px black;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: red;
+            font-size: 24px;
+            display: none;
+        }
+        #loading::after {
+            content: '...';
+            animation: dots 1s steps(3, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        #volumeControl {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: red;
+        }
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: red;
+            font-size: 20px;
+            font-family: monospace;
+            display: none;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            width: 80%;
+            justify-content: center;
+        }
+        .slider-container label {
+            color: red;
+            margin-right: 10px;
+            width: 80px;
+            text-align: right;
+        }
+        .slider-container input[type="range"] {
+            width: 200px;
+        }
+        #hurtButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: red;
+            border: 2px solid red;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: none;
+        }
+        #hurtButton:hover {
+            background-color: darkred;
+            color: white;
+        }
+        #endButton {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: black;
+            color: red;
+            border: 2px solid red;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: none;
+        }
+        #endButton:hover {
+            background-color: darkred;
+            color: white;
+        }
+        #highScores {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: lime;
+            font-family: monospace;
+            display: none;
+            text-align: center;
+        }
+        #highScores input {
+            background-color: black;
+            color: lime;
+            border: 2px solid lime;
+            padding: 5px;
+            margin: 5px;
+        }
+        #highScores h2, #highScores p {
+            color: lime;
+        }
+        #scoreList {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        #multiplierDisplay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: lime;
+            font-size: 20px;
+            font-family: monospace;
+            display: none;
+        }
+        #homeButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: black;
+            color: red;
+            border: 2px solid red;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: monospace;
+            z-index: 1000;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #homeButton:hover {
+            background-color: darkred;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button id="homeButton" onclick="window.location.href='/'">HOME</button>
+    <div id="container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="welcomeScreen">
+            <h1>Welcome to the Red Room</h1>
+            <div class="slider-container">
+                <label for="painSlider">Pain:</label>
+                <input type="range" id="painSlider" min="0" max="100" value="50">
+            </div>
+            <div class="slider-container">
+                <label for="sufferingSlider">Suffering:</label>
+                <input type="range" id="sufferingSlider" min="0" max="100" value="50">
+            </div>
+            <div class="slider-container">
+                <label for="magicSlider">Magic:</label>
+                <input type="range" id="magicSlider" min="0" max="100" value="50">
+            </div>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <button id="basicRoomButton">Basic Room</button>
+                <button id="friendRoomButton">Bring a Friend</button>
+                <button id="viewScoresButton">View Scores</button>
+            </div>
+        </div>
+        <div id="loading">Loading</div>
+        <div id="timer">00:00:00</div>
+        <button id="hurtButton">HURT MYSELF</button>
+        <button id="endButton">SUICIDE</button>
+        <div id="highScores">
+            <h2>High Scores</h2>
+            <div id="scoreList"></div>
+            <input type="text" id="nameInput" placeholder="Enter Name">
+            <button id="saveScoreButton">Save Score</button>
+            <button id="closeScoresButton">Close Scores</button>
+        </div>
+        <div id="multiplierDisplay">Multiplier: 1x</div>
+    </div>
+    <input type="file" id="imageInput" style="display: none;" accept="image/*">
+    <div id="volumeControl">
+        Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const imageInput = document.getElementById('imageInput');
+        const basicRoomButton = document.getElementById('basicRoomButton');
+        const friendRoomButton = document.getElementById('friendRoomButton');
+        const loadingScreen = document.getElementById('loading');
+        const backgroundMusic = new Audio('https://keen-dasik-165924.netlify.app/red.mp3');
+        backgroundMusic.loop = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const timerDisplay = document.getElementById('timer');
+        const hurtButton = document.getElementById('hurtButton');
+        const endButton = document.getElementById('endButton');
+        const highScoresDiv = document.getElementById('highScores');
+        const scoreListDiv = document.getElementById('scoreList');
+        const nameInput = document.getElementById('nameInput');
+        const saveScoreButton = document.getElementById('saveScoreButton');
+        const viewScoresButton = document.getElementById('viewScoresButton');
+        const closeScoresButton = document.getElementById('closeScoresButton');
+        const multiplierDisplay = document.getElementById('multiplierDisplay');
+        let startTime, timerInterval, clickCount = 0, multiplier = 1;
+        let scores = JSON.parse(localStorage.getItem('redRoomScores')) || [];
+        let finalTime;
+        let multiplierCost = 10;
+
+        function playBeepWithRandomPitch() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = Math.random() * 800 + 200;
+            gainNode.gain.setValueAtTime(1.5, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + 0.1);
+            clickCount++;
+            if (clickCount >= multiplierCost) {
+                multiplier++;
+                multiplierCost += 10 * multiplier;
+            }
+            multiplierDisplay.textContent = `Multiplier: ${multiplier}x`;
+        }
+        canvas.addEventListener('touchstart', playBeepWithRandomPitch);
+        canvas.addEventListener('mousedown', playBeepWithRandomPitch);
+        hurtButton.addEventListener('click', playBeepWithRandomPitch);
+        endButton.addEventListener('click', function() {
+            finalTime = Date.now() - startTime;
+            highScoresDiv.style.display = 'block';
+            displayScores();
+        });
+        viewScoresButton.addEventListener('click', function() {
+            highScoresDiv.style.display = 'block';
+            displayScores();
+        });
+        saveScoreButton.addEventListener('click', function(){
+            saveScore();
+            highScoresDiv.style.display = 'none';
+            welcomeScreen.style.display = 'flex';
+            canvas.style.display = 'none';
+            hurtButton.style.display = 'none';
+            endButton.style.display = 'none';
+            timerDisplay.style.display = 'none';
+            multiplierDisplay.style.display = 'none';
+            clearInterval(timerInterval);
+        });
+        closeScoresButton.addEventListener('click', function() {
+            highScoresDiv.style.display = 'none';
+        });
+        const game = {
+            WIDTH: 800,
+            HEIGHT: 600,
+            backgroundImage: new Image(),
+            friendImage: null,
+            friendX: 0,
+            friendY: 0,
+            friendDX: 2,
+            friendDY: 2,
+        };
+        game.backgroundImage.src = 'https://i.postimg.cc/bJvP7ndH/door.png';
+        function drawBackground() {
+            ctx.drawImage(game.backgroundImage, 0, 0, game.WIDTH, game.HEIGHT);
+        }
+        function drawFriendImage(offsetX, offsetY) {
+            if (game.friendImage && game.friendImage.complete) {
+                const scaledWidth = game.friendImage.width * 0.3;
+                const scaledHeight = game.friendImage.height * 0.3;
+                ctx.drawImage(game.friendImage, game.friendX + offsetX, game.friendY + offsetY, scaledWidth, scaledHeight);
+            }
+        }
+        function drawRandomText() {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (let i = 0; i < 50; i++) {
+                const letter = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillStyle = Math.random() < 0.95 ? 'black' : 'red';
+                ctx.font = '24px Arial';
+                ctx.fillText(letter, Math.random() * (game.WIDTH - 20), Math.random() * (game.HEIGHT - 20));
+            }
+        }
+        function drawRandomCircles() {
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random() * game.WIDTH, Math.random() * game.HEIGHT, Math.floor(Math.random() * 10) + 10, 0, 2 * Math.PI);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+            }
+        }
+        function formatTime(milliseconds) {
+            const seconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            return `${String(hours).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+        }
+        function updateTimer() {
+            const currentTime = Date.now();
+            const elapsedTime = currentTime - startTime;
+            timerDisplay.textContent = formatTime(elapsedTime);
+        }
+        function runRoomLogic(friendImage) {
+            try {
+                welcomeScreen.style.display = "none";
+                loadingScreen.style.display = "none";
+                game.friendImage = friendImage;
+                let running = true;
+                let redOverlayAlpha = 255;
+                let redRoomVisible = false;
+                let redRoomTimer = 0;
+                const redRoomDuration = 1300;
+                let redRoomPosition = { x: 0, y: 0 };
+                let shakeIntensity = 5;
+                let shakeDuration = 0;
+                let zoomFactor = 1.0;
+                let zoomSpeed = 0.02;
+                let zoomDirection = 1;
+                let zoomDuration = 0;
+                let flickerColor = 'black';
+                startTime = Date.now();
+                clickCount = 0;
+                multiplier = 1;
+                multiplierCost = 10;
+                multiplierDisplay.textContent = `Multiplier: ${multiplier}x`;
+                timerInterval = setInterval(updateTimer, 1000);
+                hurtButton.style.display = "block";
+                endButton.style.display = "block";
+                hurtButton.textContent = friendImage ? "HURT THEM" : "HURT MYSELF";
+                endButton.textContent = friendImage ? "KILL THEM" : "SUICIDE";
+                canvas.style.display = 'block';
+                timerDisplay.style.display = 'block';
+                multiplierDisplay.style.display = 'block';
+                backgroundMusic.play();
+                const painSlider = document.getElementById('painSlider');
+                const sufferingSlider = document.getElementById('sufferingSlider');
+                const magicSlider = document.getElementById('magicSlider');
+                const painValue = painSlider.value;
+                const sufferingValue = sufferingSlider.value;
+                const magicValue = magicSlider.value;
+                function gameLoop() {
+                    if (!running) return;
+                    ctx.clearRect(0, 0, game.WIDTH, game.HEIGHT);
+                    let offsetX = 0, offsetY = 0;
+                    if (shakeDuration > 0) {
+                        offsetX = (Math.random() - 0.5) * shakeIntensity * 2;
+                        offsetY = (Math.random() - 0.5) * shakeIntensity * 2;
+                        shakeDuration--;
+                    }
+                    ctx.save();
+                    ctx.translate(offsetX, offsetY);
+                    if (zoomDuration > 0) {
+                        zoomFactor += zoomSpeed * zoomDirection;
+                        if (zoomFactor > 1.5 || zoomFactor < 0.8) zoomDirection *= -1;
+                        zoomDuration--;
+                        ctx.translate(game.WIDTH / 2, game.HEIGHT / 2);
+                        ctx.scale(zoomFactor, zoomFactor);
+                        ctx.translate(-game.WIDTH / 2, -game.HEIGHT / 2);
+                    }
+                    drawBackground();
+                    if (game.friendImage) {
+                        game.friendX += game.friendDX;
+                        game.friendY += game.friendDY;
+                        const scaledWidth = game.friendImage.width * 0.3;
+                        const scaledHeight = game.friendImage.height * 0.3;
+                        if (game.friendX + scaledWidth > game.WIDTH || game.friendX < 0) game.friendDX *= -1;
+                        if (game.friendY + scaledHeight > game.HEIGHT || game.friendY < 0) game.friendDY *= -1;
+                        drawFriendImage(0, 0);
+                    }
+                    drawRandomText();
+                    drawRandomCircles();
+                    if (redRoomVisible) {
+                        ctx.fillStyle = `rgba(255, 0, 0, ${redOverlayAlpha / 255})`;
+                        ctx.fillRect(0, 0, game.WIDTH, game.HEIGHT);
+                        ctx.fillStyle = 'black';
+                        ctx.font = '48px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('RED ROOM', game.WIDTH / 2 + redRoomPosition.x, game.HEIGHT / 2 + redRoomPosition.y);
+                        redRoomPosition.x = (Math.random() - 0.5) * 20;
+                        redRoomPosition.y = (Math.random() - 0.5) * 20;
+                        redRoomTimer++;
+                        if (redRoomTimer >= redRoomDuration) {
+                            redRoomVisible = false;
+                            redRoomTimer = 0;
+                        }
+                    }
+                    if (Math.random() < painValue / 1000) {
+                        shakeDuration = 20;
+                        shakeIntensity = 10 + Math.random() * 10;
+                    }
+                    if (Math.random() < sufferingValue / 1000) {
+                        redRoomVisible = true;
+                        redOverlayAlpha = Math.random() * 200 + 55;
+                    }
+                    if (Math.random() < magicValue / 1000) {
+                        zoomDuration = 60;
+                        zoomFactor = 1.0;
+                    }
+                    ctx.restore();
+                    requestAnimationFrame(gameLoop);
+                }
+                gameLoop();
+            } catch (error) {
+                console.error("Error in runRoomLogic:", error);
+            }
+        }
+        function displayScores() {
+            scoreListDiv.innerHTML = '';
+            const sortedScores = scores.sort((a, b) => b.score - a.score);
+            sortedScores.forEach((score, index) => {
+                const p = document.createElement('p');
+                p.textContent = `${index + 1}. ${score.name}: ${score.score} (Time: ${formatTime(score.time)})`;
+                scoreListDiv.appendChild(p);
+            });
+        }
+        function saveScore() {
+            const name = nameInput.value || 'Anonymous';
+            const score = clickCount * multiplier;
+            scores.push({ name, score, time: finalTime });
+            localStorage.setItem('redRoomScores', JSON.stringify(scores));
+            nameInput.value = '';
+            displayScores();
+        }
+        basicRoomButton.addEventListener('click', function() {
+            loadingScreen.style.display = 'block';
+            welcomeScreen.style.display = 'none';
+            setTimeout(() => runRoomLogic(null), 1500);
+        });
+        friendRoomButton.addEventListener('click', function() {
+            imageInput.click();
+        });
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                loadingScreen.style.display = 'block';
+                welcomeScreen.style.display = 'none';
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        setTimeout(() => runRoomLogic(img), 1500);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        document.getElementById('volumeSlider').addEventListener('input', function() {
+            backgroundMusic.volume = this.value;
+        });
+    </script>
+</body>
+</html>
