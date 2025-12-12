@@ -14,6 +14,18 @@
   
   <div class="status-message" id="status-message"></div>
   
+  <div class="song-name" id="song-name">> NOW: The Intangible</div>
+  
+  <div class="planet-info-overlay hidden" id="planet-info">
+    <div class="planet-info-box">
+      <div class="planet-info-header">
+        <span id="planet-info-name">EARTH</span>
+        <button class="planet-info-close" id="planet-info-close">X</button>
+      </div>
+      <div class="planet-info-content" id="planet-info-content"></div>
+    </div>
+  </div>
+  
   <div class="controls-container">
     <a href="/" class="control-btn home-btn" title="Home">[ HOME ]</a>
     
@@ -25,13 +37,24 @@
     
     <button class="control-btn" id="settings-btn" title="Settings">[ SETTINGS ]</button>
     
-    <button class="control-btn" id="upload-audio-btn" title="Upload Music">[ UPLOAD MUSIC ]</button>
-    <button class="control-btn hidden" id="audio-play-btn" title="Play/Pause Music">[ PLAY MUSIC ]</button>
+    <button class="control-btn" id="screenshot-btn" title="Screenshot">[ SCREENSHOT ]</button>
+    
+    <button class="control-btn" id="fullscreen-btn" title="Fullscreen">[ FULLSCREEN ]</button>
   </div>
   
-  <div class="song-name hidden" id="song-name"></div>
-  
-  <input type="file" id="audio-upload" accept="audio/*">
+  <div class="music-controls">
+    <button class="control-btn music-btn" id="music-play-btn" title="Play/Pause Music">[ PLAY ]</button>
+    <select class="music-select" id="music-select">
+      <option value="the-intangible">The Intangible</option>
+      <option value="spooky-ufo">Spooky UFO</option>
+      <option value="yellow-brick-road">Yellow Brick Road</option>
+      <option value="clubbed-to-death">Clubbed to Death</option>
+    </select>
+    <div class="volume-control">
+      <span class="volume-icon">VOL</span>
+      <input type="range" id="volume-slider" min="0" max="100" value="50">
+    </div>
+  </div>
   
   <div class="settings-panel hidden" id="settings-panel">
     <div class="settings-header">
@@ -69,10 +92,26 @@
         <span class="setting-value" id="rotation-speed-val">20</span>
       </div>
       
+      <div class="setting-group">
+        <label>Orbit Trails</label>
+        <button class="toggle-btn" id="trails-toggle">[ OFF ]</button>
+      </div>
+      
+      <div class="setting-group">
+        <label>Color Theme</label>
+        <select class="theme-select" id="theme-select">
+          <option value="green">Matrix Green</option>
+          <option value="blue">Cyber Blue</option>
+          <option value="purple">Neon Purple</option>
+          <option value="red">Blood Red</option>
+          <option value="gold">Solar Gold</option>
+        </select>
+      </div>
+      
       <button class="reset-btn" id="reset-settings">[ RESET DEFAULTS ]</button>
     </div>
   </div>
   
-  <script src="solar.js?v=20251211"></script>
+  <script src="solar.js?v=20251212"></script>
 </body>
 </html>

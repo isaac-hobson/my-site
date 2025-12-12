@@ -110,15 +110,27 @@ A professional-grade full-stack mathematical simulation platform with retro-term
 Interactive solar system visualization with the following features:
 - 8 planets with realistic colors and proportional orbits (Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune)
 - Saturn features rings
+- Earth has an orbiting moon
+- Asteroid belt between Mars and Jupiter (150 asteroids)
 - Twinkling star background
 - Red matrix rain overlay (toggle with MATRIX button)
 - "ACTIVATED"/"DEACTIVATED" status messages when toggling matrix
 - Play/pause functionality
 - View rotation mode to observe from different angles
+- Orbit trails toggle (shows planet paths)
+- Planet info popup (tap any planet/sun/moon for facts)
+- Screenshot button (captures current view as PNG)
+- Fullscreen mode
+- Color themes: Matrix Green, Cyber Blue, Neon Purple, Blood Red, Solar Gold
 - Adjustable settings: orbit speed, planet scale, orbit scale, star density, rotation speed
-- Audio upload and playback (upload any song and control with separate play/pause)
+- Preset music tracks with dropdown selector:
+  - The Intangible (default)
+  - Spooky UFO
+  - Yellow Brick Road
+  - Clubbed to Death
+- Volume control slider
 - Mobile responsive design
-- Keyboard shortcuts: Space (play/pause), R (rotate view), M (matrix), Escape (close settings)
+- Keyboard shortcuts: Space (play/pause), R (rotate view), M (matrix), F (fullscreen), S (screenshot), Escape (close panels)
 
 ## Design Philosophy
 "High-Contrast Retro-Terminal Performance"

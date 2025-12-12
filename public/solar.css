@@ -46,11 +46,12 @@ canvas {
 
 #solar-canvas {
   z-index: 3;
+  cursor: pointer;
 }
 
 .controls-container {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: 4rem;
   left: 50%;
   transform: translateX(-50%);
   width: auto;
@@ -112,6 +113,154 @@ canvas {
   background: rgba(0, 51, 0, 0.9);
 }
 
+.music-controls {
+  position: fixed;
+  bottom: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  z-index: 100;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--primary-green);
+  border-radius: 0;
+}
+
+.music-btn {
+  min-width: 80px;
+}
+
+.music-select,
+.theme-select {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.music-select option,
+.theme-select option {
+  background: #000;
+  color: var(--primary-green);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.volume-icon {
+  font-size: 0.9rem;
+  color: var(--primary-green);
+}
+
+#volume-slider {
+  width: 80px;
+  height: 6px;
+  background: var(--dark-green);
+  border: 1px solid var(--primary-green);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--primary-green);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--glow-green);
+}
+
+#volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--primary-green);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px var(--glow-green);
+}
+
+.planet-info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.planet-info-overlay.hidden {
+  display: none;
+}
+
+.planet-info-box {
+  background: rgba(0, 10, 0, 0.95);
+  border: 2px solid var(--primary-green);
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 30px var(--glow-green);
+}
+
+.planet-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: var(--dark-green);
+  border-bottom: 1px solid var(--primary-green);
+  font-size: 1.3rem;
+  color: var(--glow-green);
+  text-shadow: 0 0 5px var(--glow-green);
+  letter-spacing: 0.1em;
+}
+
+.planet-info-close {
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
+  background: transparent;
+  border: none;
+  color: var(--primary-green);
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.planet-info-close:hover {
+  color: var(--glow-green);
+  text-shadow: 0 0 10px var(--glow-green);
+}
+
+.planet-info-content {
+  padding: 1rem;
+}
+
+.info-row {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.info-row span {
+  color: var(--glow-green);
+  text-shadow: 0 0 3px var(--glow-green);
+}
+
 .settings-panel {
   position: fixed;
   top: 50%;
@@ -124,6 +273,8 @@ canvas {
   max-width: 350px;
   z-index: 200;
   box-shadow: 0 0 30px var(--glow-green);
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .settings-panel.hidden {
@@ -140,6 +291,8 @@ canvas {
   font-size: 1.1rem;
   color: var(--glow-green);
   text-shadow: 0 0 5px var(--glow-green);
+  position: sticky;
+  top: 0;
 }
 
 .close-settings {
@@ -214,6 +367,24 @@ canvas {
   margin-left: 0.5rem;
 }
 
+.toggle-btn {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  background: transparent;
+  border: 1px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  text-shadow: 0 0 5px var(--glow-green);
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover,
+.toggle-btn.active {
+  background: var(--dark-green);
+  box-shadow: 0 0 10px var(--glow-green);
+}
+
 .reset-btn {
   width: 100%;
   font-family: 'VT323', monospace;
@@ -264,57 +435,6 @@ canvas {
     0 0 40px var(--red-matrix);
 }
 
-@media (max-width: 600px) {
-  .controls-container {
-    bottom: 0.8rem;
-    gap: 0.4rem;
-    padding: 0.3rem;
-  }
-  
-  .control-btn {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.7rem;
-  }
-  
-  .settings-panel {
-    width: 95%;
-    max-width: none;
-  }
-  
-  .settings-header {
-    font-size: 1rem;
-    padding: 0.6rem 0.8rem;
-  }
-  
-  .settings-content {
-    padding: 0.8rem;
-  }
-  
-  .setting-group {
-    margin-bottom: 0.8rem;
-  }
-  
-  .setting-group label {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 400px) {
-  .control-btn {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.5rem;
-  }
-}
-
-#audio-upload {
-  display: none !important;
-  position: absolute;
-  visibility: hidden;
-  width: 0;
-  height: 0;
-  opacity: 0;
-}
-
 .song-name {
   position: fixed;
   top: 1rem;
@@ -334,14 +454,109 @@ canvas {
   text-overflow: ellipsis;
 }
 
-.song-name.hidden {
-  display: none;
-}
-
 @media (max-width: 600px) {
+  .controls-container {
+    bottom: 5rem;
+    gap: 0.4rem;
+    padding: 0.3rem;
+  }
+  
+  .control-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.7rem;
+  }
+  
+  .music-controls {
+    bottom: 0.5rem;
+    gap: 0.3rem;
+    padding: 0.4rem;
+  }
+  
+  .music-btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    min-width: 60px;
+  }
+  
+  .music-select {
+    font-size: 0.85rem;
+    padding: 0.4rem;
+    max-width: 120px;
+  }
+  
+  #volume-slider {
+    width: 60px;
+  }
+  
+  .volume-icon {
+    font-size: 0.8rem;
+  }
+  
+  .settings-panel {
+    width: 95%;
+    max-width: none;
+    max-height: 70vh;
+  }
+  
+  .settings-header {
+    font-size: 1rem;
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .settings-content {
+    padding: 0.8rem;
+  }
+  
+  .setting-group {
+    margin-bottom: 0.8rem;
+  }
+  
+  .setting-group label {
+    font-size: 0.9rem;
+  }
+  
   .song-name {
     top: 0.5rem;
     font-size: 0.85rem;
     padding: 0.4rem 1rem;
+  }
+  
+  .planet-info-box {
+    width: 95%;
+  }
+  
+  .planet-info-header {
+    font-size: 1.1rem;
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .planet-info-content {
+    padding: 0.8rem;
+  }
+  
+  .info-row {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .control-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .music-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .volume-control {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.3rem;
+  }
+  
+  #volume-slider {
+    width: 100px;
   }
 }
