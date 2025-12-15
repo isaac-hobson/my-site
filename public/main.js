@@ -56,18 +56,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const secretDropdown = document.getElementById('secret-dropdown');
   
   if (secretBtn && secretDropdown) {
-    secretBtn.addEventListener('click', (e) => {
+    const toggleSecret = (e) => {
+      e.preventDefault();
       e.stopPropagation();
       secretBtn.classList.toggle('active');
       secretDropdown.classList.toggle('active');
-    });
+    };
     
-    document.addEventListener('click', (e) => {
+    secretBtn.addEventListener('click', toggleSecret);
+    secretBtn.addEventListener('touchend', toggleSecret, { passive: false });
+    
+    const closeSecret = (e) => {
       if (!secretDropdown.contains(e.target) && e.target !== secretBtn) {
         secretBtn.classList.remove('active');
         secretDropdown.classList.remove('active');
       }
-    });
+    };
+    
+    document.addEventListener('click', closeSecret);
+    document.addEventListener('touchend', closeSecret);
   }
   
   if (document.getElementById('geometric-shapes')) {
