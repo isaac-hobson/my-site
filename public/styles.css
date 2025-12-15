@@ -747,3 +747,74 @@ html, body {
   padding: 2rem;
   opacity: 0.6;
 }
+
+/* Secret Section */
+.secret-section {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+  position: relative;
+}
+
+.secret-btn {
+  background: transparent;
+  border: 1px solid #ff3333;
+  color: #ff3333;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 2px;
+}
+
+.secret-btn:hover {
+  background: rgba(255, 51, 51, 0.1);
+  box-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
+}
+
+.secret-btn.active {
+  background: rgba(255, 51, 51, 0.2);
+  box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+}
+
+.secret-dropdown {
+  margin-top: 1rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.secret-dropdown.active {
+  max-height: 600px;
+  opacity: 1;
+}
+
+.secret-dropdown.hidden {
+  display: block;
+}
+
+.secret-content {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #333;
+  padding: 1.5rem 2rem;
+  text-align: left;
+  line-height: 1.6;
+}
+
+.secret-text {
+  font-size: 1.1rem;
+  margin: 0.3rem 0;
+}
+
+.secret-text.red {
+  color: #ff4444;
+  text-shadow: 0 0 5px rgba(255, 68, 68, 0.3);
+}
+
+.secret-text.blue {
+  color: #4488ff;
+  text-shadow: 0 0 5px rgba(68, 136, 255, 0.3);
+}

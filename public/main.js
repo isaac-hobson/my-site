@@ -52,6 +52,24 @@ document.addEventListener('DOMContentLoaded', () => {
     launchBtn.addEventListener('touchstart', handleLaunch, { passive: false });
   }
   
+  const secretBtn = document.getElementById('secret-btn');
+  const secretDropdown = document.getElementById('secret-dropdown');
+  
+  if (secretBtn && secretDropdown) {
+    secretBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      secretBtn.classList.toggle('active');
+      secretDropdown.classList.toggle('active');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!secretDropdown.contains(e.target) && e.target !== secretBtn) {
+        secretBtn.classList.remove('active');
+        secretDropdown.classList.remove('active');
+      }
+    });
+  }
+  
   if (document.getElementById('geometric-shapes')) {
     createGeometricShapes();
   }
