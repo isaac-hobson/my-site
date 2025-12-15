@@ -25,11 +25,13 @@ A professional-grade full-stack mathematical simulation platform with retro-term
 │   ├── index.html       # Homepage with auth UI
 │   ├── shapes.html      # Simulator page
 │   ├── solar.html       # Solar system simulation page
+│   ├── fractal.html     # Custom fractal generator page
 │   ├── redroom.html     # Red Room horror experience
 │   ├── dashboard.html   # User dashboard
 │   ├── styles.css       # Main styles
 │   ├── shapes.css       # Simulator styles
 │   ├── solar.css        # Solar system styles
+│   ├── fractal.css      # Fractal generator styles
 │   ├── dashboard.css    # Dashboard styles
 │   ├── matrix.js        # Matrix rain animation
 │   ├── main.js          # Homepage interactions
@@ -37,6 +39,7 @@ A professional-grade full-stack mathematical simulation platform with retro-term
 │   ├── simulations.js   # 17 simulation implementations
 │   ├── simulator-ui.js  # Simulator controls/export
 │   ├── solar.js         # Solar system simulation
+│   ├── fractal.js       # WebGL2 fractal generator
 │   └── dashboard.js     # Dashboard functionality
 ├── package.json         # Dependencies
 ├── tsconfig.json        # TypeScript config
@@ -132,6 +135,24 @@ Interactive solar system visualization with the following features:
 - Volume control slider
 - Mobile responsive design
 - Keyboard shortcuts: Space (play/pause), R (rotate view), M (matrix), F (fullscreen), S (screenshot), Escape (close panels)
+
+## Fractal Generator
+Professional WebGL2-powered fractal generator with the following features:
+- GPU-accelerated rendering using fragment shaders for smooth 60fps performance
+- 4 built-in fractal presets:
+  - Mandelbrot Set - the classic fractal with z = z^2 + c
+  - Julia Set - uses fixed constant with z starting at pixel position
+  - Burning Ship - asymmetric flame-like patterns using absolute values
+  - Tricorn (Mandelbar) - three-cornered bulbs using complex conjugate
+- Custom fractal code input using GLSL syntax
+- Auto-zoom feature that infinitely zooms into detailed regions
+- Adjustable parameters: max iterations (16-2048), color shift
+- Mouse controls: scroll to zoom, click-drag to pan
+- Touch-friendly for mobile devices
+- Info modal explaining equations and usage
+- Zoom indicator showing current magnification level
+- Professional retro-terminal UI matching site theme
+- Accessed via "FRACTAL GENERATOR" button on homepage
 
 ## Red Room
 Interactive horror-themed experience with the following features:
