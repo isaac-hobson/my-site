@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMPULSIVE.CC - Fractal Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="fractal.css">
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanlines"></div>
+  
+  <div class="fractal-container">
+    <header class="fractal-header">
+      <a href="/" class="back-link">[ BACK ]</a>
+      <h1 class="fractal-title">FRACTAL GENERATOR</h1>
+      <button class="info-btn" id="info-btn">[ INFO ]</button>
+    </header>
+    
+    <div class="fractal-main">
+      <div class="fractal-canvas-wrapper">
+        <canvas id="fractal-canvas"></canvas>
+        <div class="fractal-overlay" id="fractal-overlay">
+          <span class="overlay-text">SELECT A PRESET OR ENTER CUSTOM CODE</span>
+        </div>
+        <div class="zoom-indicator" id="zoom-indicator">ZOOM: 1.00x</div>
+      </div>
+      
+      <div class="fractal-controls">
+        <div class="control-section">
+          <label class="control-label">> PRESET FRACTALS</label>
+          <select id="preset-select" class="fractal-select">
+            <option value="">-- Select Preset --</option>
+            <option value="mandelbrot">Mandelbrot Set</option>
+            <option value="julia">Julia Set</option>
+            <option value="burning-ship">Burning Ship</option>
+            <option value="tricorn">Tricorn (Mandelbar)</option>
+          </select>
+        </div>
+        
+        <div class="control-section">
+          <label class="control-label">> CUSTOM FRACTAL CODE</label>
+          <textarea id="custom-code" class="code-input" placeholder="// Enter your fractal iteration code here
+// Available variables:
+//   z - complex number (vec2)
+//   c - constant (vec2) 
+//   i - iteration count
+// 
+// Example (Mandelbrot):
+// z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;"></textarea>
+        </div>
+        
+        <div class="control-section">
+          <label class="control-label">> PARAMETERS</label>
+          <div class="param-grid">
+            <div class="param-item">
+              <label>Iterations</label>
+              <input type="number" id="max-iterations" value="256" min="16" max="2048">
+            </div>
+            <div class="param-item">
+              <label>Color Shift</label>
+              <input type="range" id="color-shift" value="0" min="0" max="360">
+            </div>
+          </div>
+        </div>
+        
+        <div class="control-buttons">
+          <button class="control-btn primary" id="generate-btn">[ GENERATE ]</button>
+          <button class="control-btn" id="auto-zoom-btn">[ AUTO ZOOM ]</button>
+          <button class="control-btn" id="reset-btn">[ RESET ]</button>
+        </div>
+        
+        <div class="status-bar" id="status-bar">> READY</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal-overlay hidden" id="info-modal">
+    <div class="modal-content info-modal-content">
+      <button class="modal-close" id="info-close">X</button>
+      <h2 class="modal-title">> FRACTAL GENERATOR INFO</h2>
+      <div class="info-content">
+        <section class="info-section">
+          <h3>> WHAT ARE FRACTALS?</h3>
+          <p>Fractals are infinitely complex patterns that are self-similar across different scales. They are created by repeating a simple process over and over in an ongoing feedback loop.</p>
+        </section>
+        
+        <section class="info-section">
+          <h3>> HOW TO USE</h3>
+          <p>1. Select a preset from the dropdown, or write custom code</p>
+          <p>2. Click GENERATE to render the fractal</p>
+          <p>3. Use AUTO ZOOM to infinitely zoom into detailed areas</p>
+          <p>4. Click and drag to pan, scroll to zoom manually</p>
+        </section>
+        
+        <section class="info-section">
+          <h3>> CUSTOM CODE SYNTAX</h3>
+          <p>The generator uses GLSL (OpenGL Shading Language). Available variables:</p>
+          <pre class="code-example">
+z    - Current complex number (vec2)
+c    - Constant/seed point (vec2)  
+i    - Current iteration (int)
+
+// Complex operations:
+z.x  - Real part
+z.y  - Imaginary part
+
+// Example formulas:
+// Mandelbrot: z = z^2 + c
+z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
+
+// Julia: (use preset - Julia requires special init)
+// z starts at pixel position, c is constant
+z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
+
+// Burning Ship: z = (|Re(z)| + i|Im(z)|)^2 + c
+z = vec2(abs(z.x), abs(z.y));
+z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
+
+// Tricorn: z = conj(z)^2 + c
+z = vec2(z.x*z.x - z.y*z.y, -2.0*z.x*z.y) + c;</pre>
+        </section>
+        
+        <section class="info-section">
+          <h3>> PRESET DETAILS</h3>
+          <p><strong>Mandelbrot Set:</strong> The classic fractal. Points where z = z^2 + c remains bounded.</p>
+          <p><strong>Julia Set:</strong> Related to Mandelbrot but uses a fixed constant. Creates varied organic shapes.</p>
+          <p><strong>Burning Ship:</strong> Uses absolute values, creating flame-like asymmetric patterns.</p>
+          <p><strong>Tricorn:</strong> Uses complex conjugate, producing three-cornered bulbs.</p>
+        </section>
+        
+        <section class="info-section">
+          <h3>> PERFORMANCE TIPS</h3>
+          <p>- Lower iterations = faster rendering</p>
+          <p>- Auto zoom targets high-detail regions</p>
+          <p>- WebGL2 GPU acceleration for smooth 60fps</p>
+        </section>
+      </div>
+    </div>
+  </div>
+  
+  <script src="matrix.js?v=20251211"></script>
+  <script src="fractal.js?v=20251215"></script>
+</body>
+</html>
