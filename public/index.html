@@ -130,8 +130,28 @@
     </div>
   </div>
   
-  <script src="matrix.js?v=20251211"></script>
-  <script src="main.js?v=20251211"></script>
-  <script src="auth.js?v=20251211"></script>
+  <script src="matrix.js?v=20251215"></script>
+  <script src="main.js?v=20251215"></script>
+  <script src="auth.js?v=20251215"></script>
+  <script>
+    function toggleSecretDropdown(e) {
+      if (e) e.stopPropagation();
+      var btn = document.getElementById('secret-btn');
+      var dropdown = document.getElementById('secret-dropdown');
+      if (btn && dropdown) {
+        btn.classList.toggle('active');
+        dropdown.classList.toggle('active');
+      }
+    }
+    document.addEventListener('click', function(e) {
+      var section = document.getElementById('secret-section');
+      var dropdown = document.getElementById('secret-dropdown');
+      var btn = document.getElementById('secret-btn');
+      if (section && dropdown && btn && !section.contains(e.target)) {
+        btn.classList.remove('active');
+        dropdown.classList.remove('active');
+      }
+    });
+  </script>
 </body>
 </html>

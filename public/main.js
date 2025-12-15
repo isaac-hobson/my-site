@@ -291,10 +291,3 @@ async function loadPublicPresets() {
   }
 }
 
-function toggleSecretDropdown(e) {
-  e.stopPropagation();
-  const btn = document.getElementById('secret-btn');
-  const dropdown = document.getElementById('secret-dropdown');
-  btn.classList.toggle('active');
-  dropdown.classList.toggle('active');
-}
