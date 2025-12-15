@@ -52,15 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     launchBtn.addEventListener('touchstart', handleLaunch, { passive: false });
   }
   
-  document.addEventListener('click', function(e) {
-    const secretSection = document.getElementById('secret-section');
-    const secretDropdown = document.getElementById('secret-dropdown');
-    if (secretSection && secretDropdown && !secretSection.contains(e.target)) {
-      document.getElementById('secret-btn').classList.remove('active');
-      secretDropdown.classList.remove('active');
-    }
-  });
-  
+    
   if (document.getElementById('geometric-shapes')) {
     createGeometricShapes();
   }

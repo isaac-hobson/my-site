@@ -748,8 +748,8 @@ html, body {
   opacity: 0.6;
 }
 
-/* Secret Section */
-.secret-section {
+/* Secret Section - using native details/summary */
+.secret-details {
   width: 100%;
   max-width: 800px;
   margin: 2rem auto;
@@ -759,7 +759,7 @@ html, body {
   z-index: 50;
 }
 
-.secret-btn {
+.secret-summary {
   display: inline-block;
   background: transparent;
   border: 1px solid #ff3333;
@@ -770,43 +770,34 @@ html, body {
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 2px;
-  text-decoration: none;
-  position: relative;
-  z-index: 100;
+  list-style: none;
 }
 
-.secret-btn:hover,
-.secret-btn:active {
+.secret-summary::-webkit-details-marker {
+  display: none;
+}
+
+.secret-summary::marker {
+  display: none;
+  content: '';
+}
+
+.secret-summary:hover,
+.secret-summary:active {
   background: rgba(255, 51, 51, 0.1);
   box-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
 }
 
-.secret-btn.active {
+.secret-details[open] .secret-summary {
   background: rgba(255, 51, 51, 0.2);
   box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
-}
-
-.secret-dropdown {
-  margin-top: 1rem;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.3s ease;
-  opacity: 0;
-}
-
-.secret-dropdown.active {
-  max-height: 800px;
-  opacity: 1;
-}
-
-.secret-dropdown.hidden {
-  display: block;
 }
 
 .secret-content {
   background: rgba(0, 0, 0, 0.9);
   border: 1px solid #333;
   padding: 1.2rem 1rem;
+  margin-top: 1rem;
   text-align: left;
   line-height: 1.6;
 }
@@ -827,11 +818,11 @@ html, body {
 }
 
 @media (max-width: 600px) {
-  .secret-section {
+  .secret-details {
     padding: 0 0.5rem;
   }
   
-  .secret-btn {
+  .secret-summary {
     font-size: 1.2rem;
     padding: 0.6rem 1.2rem;
   }

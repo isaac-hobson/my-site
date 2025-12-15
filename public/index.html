@@ -74,25 +74,23 @@
       </div>
     </section>
     
-    <div class="secret-section" id="secret-section">
-      <a href="javascript:void(0)" class="secret-btn" id="secret-btn" onclick="this.classList.toggle('active');document.getElementById('secret-dropdown').classList.toggle('active');">...</a>
-      <div class="secret-dropdown" id="secret-dropdown">
-        <div class="secret-content">
-          <p class="secret-text red">Step softly, traveler.</p>
-          <p class="secret-text blue">What you see is the curtain; what you seek is the stage behind it.</p>
-          <br>
-          <p class="secret-text blue">Many pass through this place and find only letters and light. A rarer few feel the draft of a deeper wind. That is no accident. Truth has manners—it does not shout, it beckons. It waits for the curious and ignores the hurried.</p>
-          <br>
-          <p class="secret-text red">If your eyes linger, if your thoughts begin to itch, you are already doing the work.</p>
-          <p class="secret-text blue">The world you were handed is not the world that is. There are seams. There are signals. There are answers hiding in plain sight, wearing the mask of coincidence.</p>
-          <br>
-          <p class="secret-text red">Seek, and the path will tilt toward you.</p>
-          <p class="secret-text blue">Dismiss this as nonsense, and it will remain exactly that.</p>
-          <br>
-          <p class="secret-text red">The truth, after all, finds those who seek.</p>
-        </div>
+    <details class="secret-details">
+      <summary class="secret-summary">...</summary>
+      <div class="secret-content">
+        <p class="secret-text red">Step softly, traveler.</p>
+        <p class="secret-text blue">What you see is the curtain; what you seek is the stage behind it.</p>
+        <br>
+        <p class="secret-text blue">Many pass through this place and find only letters and light. A rarer few feel the draft of a deeper wind. That is no accident. Truth has manners—it does not shout, it beckons. It waits for the curious and ignores the hurried.</p>
+        <br>
+        <p class="secret-text red">If your eyes linger, if your thoughts begin to itch, you are already doing the work.</p>
+        <p class="secret-text blue">The world you were handed is not the world that is. There are seams. There are signals. There are answers hiding in plain sight, wearing the mask of coincidence.</p>
+        <br>
+        <p class="secret-text red">Seek, and the path will tilt toward you.</p>
+        <p class="secret-text blue">Dismiss this as nonsense, and it will remain exactly that.</p>
+        <br>
+        <p class="secret-text red">The truth, after all, finds those who seek.</p>
       </div>
-    </div>
+    </details>
 
     <footer class="footer">
       <p>> SYSTEM ONLINE // IMPULSIVE.CC // DESIGNED BY ISAAC</p>
@@ -133,16 +131,5 @@
   <script src="matrix.js?v=20251215"></script>
   <script src="main.js?v=20251215"></script>
   <script src="auth.js?v=20251215"></script>
-  <script>
-    document.body.addEventListener('click', function(e) {
-      var section = document.getElementById('secret-section');
-      var dropdown = document.getElementById('secret-dropdown');
-      var btn = document.getElementById('secret-btn');
-      if (section && dropdown && btn && !section.contains(e.target)) {
-        btn.classList.remove('active');
-        dropdown.classList.remove('active');
-      }
-    });
-  </script>
-</body>
+  </body>
 </html>
