@@ -52,44 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     launchBtn.addEventListener('touchstart', handleLaunch, { passive: false });
   }
   
-  const secretBtn = document.getElementById('secret-btn');
-  const secretDropdown = document.getElementById('secret-dropdown');
-  
-  if (secretBtn && secretDropdown) {
-    let lastTap = 0;
-    
-    const toggleSecret = (e) => {
-      const now = Date.now();
-      if (now - lastTap < 300) return;
-      lastTap = now;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const isActive = secretDropdown.classList.contains('active');
-      if (isActive) {
-        secretBtn.classList.remove('active');
-        secretDropdown.classList.remove('active');
-      } else {
-        secretBtn.classList.add('active');
-        secretDropdown.classList.add('active');
-      }
-    };
-    
-    secretBtn.addEventListener('click', toggleSecret);
-    secretBtn.addEventListener('touchstart', toggleSecret, { passive: false });
-    
-    const closeSecret = (e) => {
-      const target = e.target;
-      if (!secretDropdown.contains(target) && target !== secretBtn && !secretBtn.contains(target)) {
-        secretBtn.classList.remove('active');
-        secretDropdown.classList.remove('active');
-      }
-    };
-    
-    document.addEventListener('click', closeSecret);
-    document.addEventListener('touchstart', closeSecret, { passive: true });
-  }
+  document.addEventListener('click', function(e) {
+    const secretSection = document.getElementById('secret-section');
+    const secretDropdown = document.getElementById('secret-dropdown');
+    if (secretSection && secretDropdown && !secretSection.contains(e.target)) {
+      document.getElementById('secret-btn').classList.remove('active');
+      secretDropdown.classList.remove('active');
+    }
+  });
   
   if (document.getElementById('geometric-shapes')) {
     createGeometricShapes();
@@ -319,4 +289,12 @@ async function loadPublicPresets() {
     console.error('Error loading public presets:', err);
     section.classList.add('hidden');
   }
+}
+
+function toggleSecretDropdown(e) {
+  e.stopPropagation();
+  const btn = document.getElementById('secret-btn');
+  const dropdown = document.getElementById('secret-dropdown');
+  btn.classList.toggle('active');
+  dropdown.classList.toggle('active');
 }
