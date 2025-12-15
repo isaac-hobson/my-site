@@ -56,25 +56,39 @@ document.addEventListener('DOMContentLoaded', () => {
   const secretDropdown = document.getElementById('secret-dropdown');
   
   if (secretBtn && secretDropdown) {
+    let lastTap = 0;
+    
     const toggleSecret = (e) => {
+      const now = Date.now();
+      if (now - lastTap < 300) return;
+      lastTap = now;
+      
       e.preventDefault();
       e.stopPropagation();
-      secretBtn.classList.toggle('active');
-      secretDropdown.classList.toggle('active');
+      
+      const isActive = secretDropdown.classList.contains('active');
+      if (isActive) {
+        secretBtn.classList.remove('active');
+        secretDropdown.classList.remove('active');
+      } else {
+        secretBtn.classList.add('active');
+        secretDropdown.classList.add('active');
+      }
     };
     
     secretBtn.addEventListener('click', toggleSecret);
-    secretBtn.addEventListener('touchend', toggleSecret, { passive: false });
+    secretBtn.addEventListener('touchstart', toggleSecret, { passive: false });
     
     const closeSecret = (e) => {
-      if (!secretDropdown.contains(e.target) && e.target !== secretBtn) {
+      const target = e.target;
+      if (!secretDropdown.contains(target) && target !== secretBtn && !secretBtn.contains(target)) {
         secretBtn.classList.remove('active');
         secretDropdown.classList.remove('active');
       }
     };
     
     document.addEventListener('click', closeSecret);
-    document.addEventListener('touchend', closeSecret);
+    document.addEventListener('touchstart', closeSecret, { passive: true });
   }
   
   if (document.getElementById('geometric-shapes')) {
