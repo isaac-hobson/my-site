@@ -204,20 +204,129 @@ function render() {
   document.getElementById('zoom-indicator').textContent = 'ZOOM: ' + zoom.toExponential(2) + 'x';
 }
 
+let autoGuideFrameCount = 0;
+const ANALYZE_INTERVAL = 60;
+
+function analyzeCanvasForDetail() {
+  const width = canvas.width;
+  const height = canvas.height;
+  const pixels = new Uint8Array(width * height * 4);
+  gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+  
+  const gridSize = 8;
+  const cellWidth = Math.floor(width / gridSize);
+  const cellHeight = Math.floor(height / gridSize);
+  
+  let bestScore = -1;
+  let bestCellX = gridSize / 2;
+  let bestCellY = gridSize / 2;
+  
+  for (let cellY = 1; cellY < gridSize - 1; cellY++) {
+    for (let cellX = 1; cellX < gridSize - 1; cellX++) {
+      const startX = cellX * cellWidth;
+      const startY = cellY * cellHeight;
+      
+      let totalBrightness = 0;
+      let colorVariance = 0;
+      let blackPixels = 0;
+      let sampleCount = 0;
+      const colors = [];
+      
+      const sampleStep = 4;
+      for (let y = startY; y < startY + cellHeight; y += sampleStep) {
+        for (let x = startX; x < startX + cellWidth; x += sampleStep) {
+          const idx = (y * width + x) * 4;
+          const r = pixels[idx];
+          const g = pixels[idx + 1];
+          const b = pixels[idx + 2];
+          
+          const brightness = (r + g + b) / 3;
+          totalBrightness += brightness;
+          
+          if (brightness < 10) {
+            blackPixels++;
+          }
+          
+          colors.push({ r, g, b });
+          sampleCount++;
+        }
+      }
+      
+      const avgBrightness = totalBrightness / sampleCount;
+      const blackRatio = blackPixels / sampleCount;
+      
+      for (let i = 0; i < colors.length; i++) {
+        for (let j = i + 1; j < Math.min(i + 10, colors.length); j++) {
+          const dr = colors[i].r - colors[j].r;
+          const dg = colors[i].g - colors[j].g;
+          const db = colors[i].b - colors[j].b;
+          colorVariance += Math.sqrt(dr*dr + dg*dg + db*db);
+        }
+      }
+      colorVariance /= colors.length;
+      
+      let score = colorVariance;
+      
+      if (blackRatio > 0.7) {
+        score *= 0.1;
+      } else if (blackRatio > 0.5) {
+        score *= 0.3;
+      }
+      
+      if (avgBrightness < 20) {
+        score *= 0.2;
+      } else if (avgBrightness > 200) {
+        score *= 0.5;
+      }
+      
+      const centerDist = Math.sqrt(
+        Math.pow(cellX - gridSize/2, 2) + 
+        Math.pow(cellY - gridSize/2, 2)
+      );
+      score *= (1 - centerDist / gridSize * 0.3);
+      
+      if (score > bestScore) {
+        bestScore = score;
+        bestCellX = cellX;
+        bestCellY = cellY;
+      }
+    }
+  }
+  
+  const screenX = (bestCellX + 0.5) / gridSize;
+  const screenY = (bestCellY + 0.5) / gridSize;
+  
+  const aspect = canvas.width / canvas.height;
+  const worldX = (screenX - 0.5) * 2 / zoom + centerX;
+  const worldY = (screenY - 0.5) * 2 / aspect / zoom + centerY;
+  
+  return { x: worldX, y: worldY, score: bestScore };
+}
+
 function autoZoomStep() {
   if (!isAutoZooming) return;
+  
+  autoGuideFrameCount++;
+  
+  if (autoGuideFrameCount % ANALYZE_INTERVAL === 0) {
+    const newTarget = analyzeCanvasForDetail();
+    if (newTarget.score > 5) {
+      autoZoomTarget = { x: newTarget.x, y: newTarget.y };
+      updateStatus('> AUTO GUIDE: FOUND DETAIL REGION');
+    }
+  }
   
   const zoomSpeed = autoZoomSpeed;
   zoom *= zoomSpeed;
   
-  const targetWeight = 0.02;
+  const targetWeight = 0.015;
   centerX += (autoZoomTarget.x - centerX) * targetWeight;
   centerY += (autoZoomTarget.y - centerY) * targetWeight;
   
   const maxZoom = 1e14;
   if (zoom > maxZoom) {
     stopAutoZoom();
-    updateStatus('> AUTO ZOOM REACHED PRECISION LIMIT');
+    updateStatus('> AUTO GUIDE REACHED PRECISION LIMIT');
     return;
   }
   
@@ -232,15 +341,14 @@ function startAutoZoom() {
   }
   
   isAutoZooming = true;
+  autoGuideFrameCount = 0;
   document.getElementById('auto-zoom-btn').classList.add('active');
-  document.getElementById('auto-zoom-btn').textContent = '[ STOP ZOOM ]';
-  updateStatus('> AUTO ZOOM ACTIVE - CLICK TO STOP');
+  document.getElementById('auto-zoom-btn').textContent = '[ STOP GUIDE ]';
+  updateStatus('> AUTO GUIDE ACTIVE - SEEKING DETAIL...');
   
-  if (currentFractalType && presetTargets[currentFractalType]) {
-    autoZoomTarget = presetTargets[currentFractalType];
-  } else {
-    autoZoomTarget = { x: centerX, y: centerY };
-  }
+  render();
+  const initialTarget = analyzeCanvasForDetail();
+  autoZoomTarget = { x: initialTarget.x, y: initialTarget.y };
   
   autoZoomStep();
 }
@@ -248,14 +356,14 @@ function startAutoZoom() {
 function stopAutoZoom() {
   isAutoZooming = false;
   document.getElementById('auto-zoom-btn').classList.remove('active');
-  document.getElementById('auto-zoom-btn').textContent = '[ AUTO ZOOM ]';
+  document.getElementById('auto-zoom-btn').textContent = '[ AUTO GUIDE ]';
   
   if (animationId) {
     cancelAnimationFrame(animationId);
     animationId = null;
   }
   
-  updateStatus('> AUTO ZOOM STOPPED');
+  updateStatus('> AUTO GUIDE STOPPED');
 }
 
 function resetView() {
