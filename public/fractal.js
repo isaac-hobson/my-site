@@ -205,7 +205,9 @@ function render() {
 }
 
 let autoGuideFrameCount = 0;
+let isAutoGuiding = false;
 const ANALYZE_INTERVAL = 60;
+const SLOW_ZOOM_SPEED = 1.003;
 
 function analyzeCanvasForDetail() {
   const width = canvas.width;
@@ -306,6 +308,26 @@ function analyzeCanvasForDetail() {
 function autoZoomStep() {
   if (!isAutoZooming) return;
   
+  zoom *= SLOW_ZOOM_SPEED;
+  
+  const targetWeight = 0.01;
+  centerX += (autoZoomTarget.x - centerX) * targetWeight;
+  centerY += (autoZoomTarget.y - centerY) * targetWeight;
+  
+  const maxZoom = 1e14;
+  if (zoom > maxZoom) {
+    stopAutoZoom();
+    updateStatus('> AUTO ZOOM REACHED PRECISION LIMIT');
+    return;
+  }
+  
+  render();
+  animationId = requestAnimationFrame(autoZoomStep);
+}
+
+function autoGuideStep() {
+  if (!isAutoGuiding) return;
+  
   autoGuideFrameCount++;
   
   if (autoGuideFrameCount % ANALYZE_INTERVAL === 0) {
@@ -316,22 +338,21 @@ function autoZoomStep() {
     }
   }
   
-  const zoomSpeed = autoZoomSpeed;
-  zoom *= zoomSpeed;
+  zoom *= SLOW_ZOOM_SPEED;
   
-  const targetWeight = 0.015;
+  const targetWeight = 0.012;
   centerX += (autoZoomTarget.x - centerX) * targetWeight;
   centerY += (autoZoomTarget.y - centerY) * targetWeight;
   
   const maxZoom = 1e14;
   if (zoom > maxZoom) {
-    stopAutoZoom();
+    stopAutoGuide();
     updateStatus('> AUTO GUIDE REACHED PRECISION LIMIT');
     return;
   }
   
   render();
-  animationId = requestAnimationFrame(autoZoomStep);
+  animationId = requestAnimationFrame(autoGuideStep);
 }
 
 function startAutoZoom() {
@@ -340,15 +361,18 @@ function startAutoZoom() {
     return;
   }
   
-  isAutoZooming = true;
-  autoGuideFrameCount = 0;
-  document.getElementById('auto-zoom-btn').classList.add('active');
-  document.getElementById('auto-zoom-btn').textContent = '[ STOP GUIDE ]';
-  updateStatus('> AUTO GUIDE ACTIVE - SEEKING DETAIL...');
+  stopAutoGuide();
   
-  render();
-  const initialTarget = analyzeCanvasForDetail();
-  autoZoomTarget = { x: initialTarget.x, y: initialTarget.y };
+  isAutoZooming = true;
+  document.getElementById('auto-zoom-btn').classList.add('active');
+  document.getElementById('auto-zoom-btn').textContent = '[ STOP ZOOM ]';
+  updateStatus('> AUTO ZOOM ACTIVE');
+  
+  if (currentFractalType && presetTargets[currentFractalType]) {
+    autoZoomTarget = presetTargets[currentFractalType];
+  } else {
+    autoZoomTarget = { x: centerX, y: centerY };
+  }
   
   autoZoomStep();
 }
@@ -356,18 +380,55 @@ function startAutoZoom() {
 function stopAutoZoom() {
   isAutoZooming = false;
   document.getElementById('auto-zoom-btn').classList.remove('active');
-  document.getElementById('auto-zoom-btn').textContent = '[ AUTO GUIDE ]';
+  document.getElementById('auto-zoom-btn').textContent = '[ AUTO ZOOM ]';
   
   if (animationId) {
     cancelAnimationFrame(animationId);
     animationId = null;
   }
   
-  updateStatus('> AUTO GUIDE STOPPED');
+  updateStatus('> AUTO ZOOM STOPPED');
+}
+
+function startAutoGuide() {
+  if (isAutoGuiding) {
+    stopAutoGuide();
+    return;
+  }
+  
+  stopAutoZoom();
+  
+  isAutoGuiding = true;
+  autoGuideFrameCount = 0;
+  document.getElementById('auto-guide-btn').classList.add('active');
+  document.getElementById('auto-guide-btn').textContent = '[ STOP GUIDE ]';
+  updateStatus('> AUTO GUIDE ACTIVE - SEEKING DETAIL...');
+  
+  render();
+  const initialTarget = analyzeCanvasForDetail();
+  autoZoomTarget = { x: initialTarget.x, y: initialTarget.y };
+  
+  autoGuideStep();
+}
+
+function stopAutoGuide() {
+  isAutoGuiding = false;
+  document.getElementById('auto-guide-btn').classList.remove('active');
+  document.getElementById('auto-guide-btn').textContent = '[ AUTO GUIDE ]';
+  
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+  
+  if (!isAutoZooming) {
+    updateStatus('> AUTO GUIDE STOPPED');
+  }
 }
 
 function resetView() {
   stopAutoZoom();
+  stopAutoGuide();
   
   if (currentFractalType && presetCenters[currentFractalType]) {
     centerX = presetCenters[currentFractalType].x;
@@ -442,6 +503,7 @@ document.getElementById('generate-btn').addEventListener('click', function() {
 });
 
 document.getElementById('auto-zoom-btn').addEventListener('click', startAutoZoom);
+document.getElementById('auto-guide-btn').addEventListener('click', startAutoGuide);
 document.getElementById('reset-btn').addEventListener('click', resetView);
 
 document.getElementById('max-iterations').addEventListener('change', function(e) {
