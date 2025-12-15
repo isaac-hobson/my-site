@@ -75,7 +75,7 @@
     </section>
     
     <div class="secret-section" id="secret-section">
-      <button class="secret-btn" id="secret-btn" onclick="toggleSecretDropdown(event)">...</button>
+      <a href="javascript:void(0)" class="secret-btn" id="secret-btn" onclick="this.classList.toggle('active');document.getElementById('secret-dropdown').classList.toggle('active');">...</a>
       <div class="secret-dropdown" id="secret-dropdown">
         <div class="secret-content">
           <p class="secret-text red">Step softly, traveler.</p>
@@ -134,16 +134,7 @@
   <script src="main.js?v=20251215"></script>
   <script src="auth.js?v=20251215"></script>
   <script>
-    function toggleSecretDropdown(e) {
-      if (e) e.stopPropagation();
-      var btn = document.getElementById('secret-btn');
-      var dropdown = document.getElementById('secret-dropdown');
-      if (btn && dropdown) {
-        btn.classList.toggle('active');
-        dropdown.classList.toggle('active');
-      }
-    }
-    document.addEventListener('click', function(e) {
+    document.body.addEventListener('click', function(e) {
       var section = document.getElementById('secret-section');
       var dropdown = document.getElementById('secret-dropdown');
       var btn = document.getElementById('secret-btn');

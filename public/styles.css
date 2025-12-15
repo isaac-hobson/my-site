@@ -756,9 +756,11 @@ html, body {
   padding: 0 1rem;
   text-align: center;
   position: relative;
+  z-index: 50;
 }
 
 .secret-btn {
+  display: inline-block;
   background: transparent;
   border: 1px solid #ff3333;
   color: #ff3333;
@@ -768,9 +770,9 @@ html, body {
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 2px;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  user-select: none;
+  text-decoration: none;
+  position: relative;
+  z-index: 100;
 }
 
 .secret-btn:hover,
